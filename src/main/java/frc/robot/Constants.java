@@ -4,14 +4,15 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Inches;
+
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Inches;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -112,4 +113,38 @@ public final class Constants {
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
   }
+
+//TODO: Need to set all the CAN IDs and DIO Ports!!
+
+  public static final class EndEffectorConstants {
+    public static final int kLeftOutTakeMotorCanId = 10;
+    public static final int kRightOutTakeMotorCanId = 10;
+    public static final int kBallHolderMotorCanId = 10;
+    public static final int kBallBolderEncoderDIOPort = 1; // Likely Absolute, which only needs one port
+  }
+
+  public static final class IntakeConstants {
+    public static final int kIntakeRotationMotorCanId = 10;
+    public static final int kIntakeEncoderDIOPort = 1;  // Likely Absolute, which only needs one port
+    
+
+  }
+  public static final class ElevatorConstants {
+    public static final double kElevatorChainRatio = 10;
+    public static final int kMaxElevatorHeight = 7;
+    public static final int kElevatorDriveMotor1CanId = 10;
+    public static final int kElevatorDriveMotor2CanId = 10;
+    public static final int[] kElevatorEncoderDIOPorts = {1, 2}; // No clue if this works, but if it does im a f*cking genius
+    public static final int kLowerLimitSwitchDIOPort = 1;
+    public static final int kUpperLimitSwitchDIOPort = 1;
+  }
+
+  public static final class ClimberConstants {
+    public static final int kClimberMotorCanId = 10;
+    public static final int kClimberServoDIOPort = 1;
+    public static final double kClimberChainRatio = 10;
+    public static final int kClimberMaxLength = 10;
+
+  }
+
 }

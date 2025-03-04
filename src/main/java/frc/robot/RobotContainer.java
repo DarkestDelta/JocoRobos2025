@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Vision.LimelightHelpers;
 import frc.robot.subsystems.DriveSubsystem;
-
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -73,10 +72,17 @@ boolean hasTarget = LimelightHelpers.getTV(""); // Do you have a valid target?
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
+    // new JoystickButton(m_driverController, Button.kR1.value)
+    //     .whileTrue(new RunCommand(
+    //         () -> m_robotDrive.setX(),
+    //         m_robotDrive));
+
     new JoystickButton(m_driverController, Button.kR1.value)
         .whileTrue(new RunCommand(
             () -> m_robotDrive.setX(),
             m_robotDrive));
+
+
   }
 
   /**
@@ -234,6 +240,5 @@ private void updateLastKnownDirection(double currentTX, State state) {
     // Low-pass filtering for TX value
     state.lastValidTX = 0.25 * currentTX + 0.75 * state.lastValidTX;
 }
-
 
 }
