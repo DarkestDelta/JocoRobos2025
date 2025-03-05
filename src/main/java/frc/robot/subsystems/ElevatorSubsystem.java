@@ -3,12 +3,13 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
 import java.lang.Math;
 
-public class ElevatorSubsystem {
+public class ElevatorSubsystem extends SubsystemBase{
 
-Encoder ElevatorEncoder = new Encoder(ElevatorConstants.kElevatorEncoderDIOPorts[1], ElevatorConstants.kElevatorEncoderDIOPorts[2]);
+Encoder ElevatorEncoder = new Encoder(ElevatorConstants.kElevatorEncoderDIOPort1, ElevatorConstants.kElevatorEncoderDIOPort2);
 DigitalInput LowerLimitSwitch = new DigitalInput(ElevatorConstants.kLowerLimitSwitchDIOPort);
 DigitalInput UpperLimitSwitch = new DigitalInput(ElevatorConstants.kUpperLimitSwitchDIOPort);
 SparkMax ElevatorDriveMotor1 = new SparkMax(ElevatorConstants.kElevatorDriveMotor1CanId, MotorType.kBrushless);
@@ -88,7 +89,7 @@ public double CalculateFinalLiftSpeed(double LiftSpeed)
     else
     {FinalLiftSpeed = 0;}
 
-    return FinalLiftSpeed;
+    return FinalLiftSpeed * LiftSpeed;
     }
 
 

@@ -2,34 +2,44 @@ package frc.robot.util;
 import edu.wpi.first.hal.PowerDistributionJNI;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.subsystems.EndEffectorSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
+// import frc.robot.subsystems.ClimberSubsystem;
+// import frc.robot.subsystems.EndEffectorSubsystem;
+// import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.util.Elastic.Notification.NotificationLevel;
+
+
 
 
 
 public class ElasticMessages {
 
-private ElevatorSubsystem Elevator = new ElevatorSubsystem();
-private EndEffectorSubsystem EndEffector = new EndEffectorSubsystem();
-private IntakeSubsystem Intake = new IntakeSubsystem();
-private ClimberSubsystem Climber = new ClimberSubsystem();
+    // Remove the direct instantiation of ElevatorSubsystem.
+    private ElevatorSubsystem elevator;
+
+    // Accept an ElevatorSubsystem instance in the constructor.
+    public ElasticMessages(ElevatorSubsystem elevator) {
+        this.elevator = elevator;
+    }
+
+
+// private EndEffectorSubsystem EndEffector = new EndEffectorSubsystem();
+// private IntakeSubsystem Intake = new IntakeSubsystem();
+// private ClimberSubsystem Climber = new ClimberSubsystem();
 
 Elastic.Notification ClimberNotif = new Elastic.Notification();
 
 
 public void DisplayAllMessages() // This is meant for a simple one time call. Do this unless there are issues. 
 {
-DisplayCurrentVoltage();
+// DisplayCurrentVoltage();
 DisplayMatchInfo();
 }
 
-void DisplayCurrentVoltage()
-{
-SmartDashboard.putNumber("Voltage", PowerDistributionJNI.getVoltage(0));
-}
+// void DisplayCurrentVoltage()
+// {
+// SmartDashboard.putNumber("Voltage", PowerDistributionJNI.getVoltage(0));
+// }
 
 void DisplayMatchInfo()
 {
@@ -41,8 +51,8 @@ SmartDashboard.putString("Game Message", DriverStation.getGameSpecificMessage())
 
 void DisplayLimitSwitchStates()
 {
-SmartDashboard.putBoolean("Lower Limit Switch", Elevator.GetLowerLimitSwitch());
-SmartDashboard.putBoolean("Upper Limit Switch", Elevator.GetUpperLimitSwitch());
+SmartDashboard.putBoolean("Lower Limit Switch", elevator.GetLowerLimitSwitch());
+SmartDashboard.putBoolean("Upper Limit Switch", elevator.GetUpperLimitSwitch());
 }
 
 public void ClimberCantGoUp()
@@ -54,5 +64,7 @@ public void ClimberCantGoUp()
         .withDisplaySeconds(2.5)
     );
 }
+
+
 
 }

@@ -18,9 +18,8 @@ import frc.robot.util.ElasticMessages;
  * project.
  */
 public class Robot extends TimedRobot {
+  private ElasticMessages elasticMessages;
   private Command m_autonomousCommand;
-  private ElasticMessages ElasticMessage = new ElasticMessages();
-
   private RobotContainer m_robotContainer;
   public Timer timer = new Timer();
 
@@ -32,7 +31,10 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    m_robotContainer = new RobotContainer();
+ // Instantiate our RobotContainer.
+ m_robotContainer = new RobotContainer();
+ // Now that m_robotContainer is initialized, pass its ElevatorSubsystem instance to ElasticMessages.
+ elasticMessages = new ElasticMessages(m_robotContainer.getElevatorSubsystem());
   }
 
   /**
@@ -50,8 +52,7 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
     // System.out.println("yes");
-    ElasticMessage.DisplayAllMessages();
-
+    elasticMessages.DisplayAllMessages();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

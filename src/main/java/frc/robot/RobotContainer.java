@@ -19,6 +19,13 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Vision.LimelightHelpers;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
+// import frc.robot.subsystems.EndEffectorSubsystem;
+// import frc.robot.subsystems.IntakeSubsystem;
+// import frc.robot.subsystems.ClimberSubsystem;
+import frc.robot.util.ElasticMessages;
+
+
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -28,6 +35,15 @@ import frc.robot.subsystems.DriveSubsystem;
 public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+  private final ElevatorSubsystem m_robotElevator = new ElevatorSubsystem();
+  
+  
+  // Pass that instance to ElasticMessages
+  private final ElasticMessages elasticMessages = new ElasticMessages(m_robotElevator);
+  // private final ClimberSubsystem m_robotClimber = new ClimberSubsystem();
+  // private final IntakeSubsystem m_robotIntake = new IntakeSubsystem();
+  // private final EndEffectorSubsystem m_robotEndEffector = new EndEffectorSubsystem();
+  
 
   // The driver's controller
   Joystick m_driverController = new Joystick(OIConstants.kDriverControllerPort);
@@ -55,7 +71,9 @@ public class RobotContainer {
     return new RunCommand( () -> m_robotDrive.drive(tx/50, ty/50,0.0, true), m_robotDrive);
   }
 
-
+  public ElevatorSubsystem getElevatorSubsystem() {
+    return m_robotElevator;
+}
 
 double tx = LimelightHelpers.getTX("") * -1;  // Horizontal offset from crosshair to target in degrees
 double ty = LimelightHelpers.getTY("") * -1;  // Vertical offset from crosshair to target in degrees
@@ -77,11 +95,20 @@ boolean hasTarget = LimelightHelpers.getTV(""); // Do you have a valid target?
     //         () -> m_robotDrive.setX(),
     //         m_robotDrive));
 
-    new JoystickButton(m_driverController, Button.kR1.value)
-        .whileTrue(new RunCommand(
-            () -> m_robotDrive.setX(),
-            m_robotDrive));
+    // new Trigger(() -> Math.abs(m_driverController.getRawAxis(7)) > 0.1)
+    // .whileTrue(new RunCommand(
+    //     () -> m_robotElevator.Lift(m_driverController.getRawAxis(7)),
+    //     m_robotElevator));
 
+    // new JoystickButton(m_driverController, Button.kR1.value) // A button
+    // .onChange(new RunCommand(() -> m_robotIntake.RaiseIntake(1),
+    //         m_robotIntake).withTimeout(10).andThen(new RunCommand(() -> m_robotClimber.Climb(.4),
+    //         m_robotClimber)));
+
+    new JoystickButton(m_driverController, Button.kR2.value) // A button
+    .whileTrue(new RunCommand(
+        () -> m_robotElevator.Lift(m_driverController.getRawAxis(7)),
+        m_robotElevator));
 
   }
 

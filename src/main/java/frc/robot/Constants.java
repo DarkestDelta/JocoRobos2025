@@ -117,31 +117,32 @@ public final class Constants {
 //TODO: Need to set all the CAN IDs and DIO Ports!!
 
   public static final class EndEffectorConstants {
-    public static final int kLeftOutTakeMotorCanId = 10;
-    public static final int kRightOutTakeMotorCanId = 10;
-    public static final int kBallHolderMotorCanId = 10;
-    public static final int kBallBolderEncoderDIOPort = 1; // Likely Absolute, which only needs one port
+    public static final int kLeftOutTakeMotorCanId = 102;
+    public static final int kRightOutTakeMotorCanId = 103;
+    public static final int kBallHolderMotorCanId = 104;
+    public static final int kBallBolderEncoderDIOPort = 7; // Likely Absolute, which only needs one port
   }
 
   public static final class IntakeConstants {
-    public static final int kIntakeRotationMotorCanId = 10;
-    public static final int kIntakeEncoderDIOPort = 1;  // Likely Absolute, which only needs one port
+    public static final int kIntakeRotationMotorCanId = 105;
+    public static final int kIntakeEncoderDIOPort = 6;  // Likely Absolute, which only needs one port
     
 
   }
   public static final class ElevatorConstants {
     public static final double kElevatorChainRatio = 10;
     public static final int kMaxElevatorHeight = 7;
-    public static final int kElevatorDriveMotor1CanId = 10;
-    public static final int kElevatorDriveMotor2CanId = 10;
-    public static final int[] kElevatorEncoderDIOPorts = {1, 2}; // No clue if this works, but if it does im a f*cking genius
-    public static final int kLowerLimitSwitchDIOPort = 1;
+    public static final int kElevatorDriveMotor1CanId = 11;
+    public static final int kElevatorDriveMotor2CanId = 12;
+    public static final int kElevatorEncoderDIOPort1 =  2;
+    public static final int kElevatorEncoderDIOPort2 =  3;
+    public static final int kLowerLimitSwitchDIOPort = 0;
     public static final int kUpperLimitSwitchDIOPort = 1;
   }
 
   public static final class ClimberConstants {
-    public static final int kClimberMotorCanId = 10;
-    public static final int kClimberServoDIOPort = 1;
+    public static final int kClimberMotorCanId = 101;
+    public static final int kClimberServoDIOPort = 5;
     public static final double kClimberChainRatio = 10;
     public static final int kClimberMaxLength = 10;
 
