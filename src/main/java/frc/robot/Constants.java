@@ -114,8 +114,6 @@ public final class Constants {
     public static final double kFreeSpeedRpm = 5676;
   }
 
-//TODO: Need to set all the CAN IDs and DIO Ports!!
-
   public static final class EndEffectorConstants {
     public static final int kLeftOutTakeMotorCanId = 102;
     public static final int kRightOutTakeMotorCanId = 103;
@@ -125,7 +123,7 @@ public final class Constants {
 
   public static final class IntakeConstants {
     public static final int kIntakeRotationMotorCanId = 105;
-    public static final int kIntakeEncoderDIOPort = 6;  // Likely Absolute, which only needs one port
+    public static final int kIntakeEncoderDIOPort = 4;  // Likely Absolute, which only needs one port
     
 
   }

@@ -32,14 +32,16 @@ Elastic.Notification ClimberNotif = new Elastic.Notification();
 
 public void DisplayAllMessages() // This is meant for a simple one time call. Do this unless there are issues. 
 {
-// DisplayCurrentVoltage();
 DisplayMatchInfo();
+DisplayLimitSwitchStates();
+DisplayElevatorPosition();
+
 }
 
-// void DisplayCurrentVoltage()
-// {
-// SmartDashboard.putNumber("Voltage", PowerDistributionJNI.getVoltage(0));
-// }
+void DisplayElevatorPosition()
+{
+SmartDashboard.putNumber("Elevator Position: ", elevator.ElevatorPosition());
+}
 
 void DisplayMatchInfo()
 {

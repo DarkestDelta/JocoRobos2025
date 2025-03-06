@@ -16,7 +16,10 @@ Servo ClimbLock = new Servo(ClimberConstants.kClimberServoPWMPort);
 
 public void Climb(double ClimbingSpeed)
 { 
+    ServoSet(true);
     ClimbMotor.set(ClimbingSpeed);
+
+
     // if (Intake.Intakeposition > 1.5)
     //     {ClimbMotor.set(ClimbingSpeed);}
     // else {
