@@ -22,10 +22,10 @@ double FinalLiftSpeed = 0;
 
 
 public Boolean GetUpperLimitSwitch()
-    {return UpperLimitSwitch.get();}
+    {return !UpperLimitSwitch.get();}
 
 public Boolean GetLowerLimitSwitch()
-    {return LowerLimitSwitch.get();}
+    {return !LowerLimitSwitch.get();}
 
 public double ElevatorPosition()
     {
@@ -38,10 +38,14 @@ public double ElevatorPosition()
 
 public void Lift(double LiftSpeed)
     {
+    // System.out.println("Lower:" + GetLowerLimitSwitch());
+    // System.out.println("Upper:" + GetUpperLimitSwitch());
+
+    // ElevatorDriveMotor1.set(LiftSpeed*.25);
     switch(GetLiftCase(LiftSpeed))
     {
     case 1:
-        ElevatorDriveMotor1.set(FinalLiftSpeed);
+        ElevatorDriveMotor1.set(CalculateFinalLiftSpeed(LiftSpeed));
         break;
 
     case 2:
@@ -55,27 +59,41 @@ public void Lift(double LiftSpeed)
         //TODO: add a notif error using elastic.
 
     case 4:
-        ElevatorDriveMotor1.set(FinalLiftSpeed);
+        ElevatorDriveMotor1.set(CalculateFinalLiftSpeed(LiftSpeed));
         break;
 
     case 5:
-        ElevatorDriveMotor1.set(FinalLiftSpeed);
+        ElevatorDriveMotor1.set(CalculateFinalLiftSpeed(LiftSpeed));
+        System.out.println("You got here!");
         break;
     }
     }
 
 public int GetLiftCase(double LiftSpeed)
 {
+    System.out.println("Encoder: " + ElevatorEncoder.get());
+    System.out.println("Position: " + ElevatorPosition());
+
+
     if (GetLowerLimitSwitch()      && (LiftSpeed > 0))
-        {LiftCase = 1;}
+        {LiftCase = 1;
+        System.out.println(LiftCase);}
     else if (GetLowerLimitSwitch() && (LiftSpeed < 0))
-        {LiftCase = 2;}
+        {LiftCase = 2;
+        System.out.println(LiftCase);
+        }
     else if (GetUpperLimitSwitch() && (LiftSpeed > 0))
-        {LiftCase = 3;}
+        {LiftCase = 3;
+        System.out.println(LiftCase);
+        }
     else if (GetUpperLimitSwitch() && (LiftSpeed < 0))
-        {LiftCase = 4;}
+        {LiftCase = 4;
+        System.out.println(LiftCase);
+        }
     else
-        {LiftCase = 5;}
+        {LiftCase = 5;
+        System.out.println(LiftCase);
+        }
     return LiftCase; 
 }
 
@@ -89,7 +107,7 @@ public double CalculateFinalLiftSpeed(double LiftSpeed)
     else
     {FinalLiftSpeed = 0;}
 
-    return FinalLiftSpeed * LiftSpeed;
+    return .1;
     }
 
 

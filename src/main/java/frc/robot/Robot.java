@@ -53,6 +53,11 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     // System.out.println("yes");
     elasticMessages.DisplayAllMessages();
+    // System.out.println("Button 1: " + m_robotContainer.m_driverController.getRawButton(1));
+    // System.out.println("Button 2: " + m_robotContainer.m_driverController.getRawButton(2));
+    // System.out.println("Button 3: " + m_robotContainer.m_driverController.getRawButton(3));
+    
+
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

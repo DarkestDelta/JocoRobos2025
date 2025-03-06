@@ -11,14 +11,15 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Vision.LimelightHelpers;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 // import frc.robot.subsystems.EndEffectorSubsystem;
@@ -37,7 +38,8 @@ public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final ElevatorSubsystem m_robotElevator = new ElevatorSubsystem();
-  
+  private final ClimberSubsystem m_robotClimber = new ClimberSubsystem();
+
   
   // Pass that instance to ElasticMessages
   private final ElasticMessages elasticMessages = new ElasticMessages(m_robotElevator);
@@ -76,6 +78,8 @@ public class RobotContainer {
     return m_robotElevator;
 }
 
+private boolean servoState = false; // Initial state (false = 0 degrees, true = 180 degrees)
+
 double tx = LimelightHelpers.getTX("") * -1;  // Horizontal offset from crosshair to target in degrees
 double ty = LimelightHelpers.getTY("") * -1;  // Vertical offset from crosshair to target in degrees
 double ta = LimelightHelpers.getTA("");  // Target area (0% to 100% of image)
@@ -106,12 +110,80 @@ boolean hasTarget = LimelightHelpers.getTV(""); // Do you have a valid target?
     //         m_robotIntake).withTimeout(10).andThen(new RunCommand(() -> m_robotClimber.Climb(.4),
     //         m_robotClimber)));
 
-    new JoystickButton(m_driverController, Button.kR2.value) // A button
-    .whileTrue(new RunCommand(
-        () -> m_robotElevator.Lift(m_driverController.getRawAxis(7)),
-        m_robotElevator).andThen(print("Working!!"))  );
+    // new Trigger(() -> m_driverController.getRawButton(1)) // Button 1 (A button)
+    // .whileTrue(
+    //     new RunCommand(
+    //         () -> m_robotElevator.Lift(m_driverController.getRawAxis(7)),
+    //         m_robotElevator
+    //     ).andThen(print("Working!!")) // Chain the print command
+    // );
+
+// Elevator control with Button 1
+new Trigger(() -> {
+    boolean buttonPressed = m_driverController.getRawButton(1);
+    System.out.println("Button 1 pressed: " + buttonPressed); // Debug button state
+    return buttonPressed;
+}).whileTrue( // Run while Button 1 is pressed
+    new RunCommand(
+        () -> {
+            // Read the axis value (e.g., throttle) and apply a deadband
+            double axisValue = MathUtil.applyDeadband(m_driverController.getRawAxis(7), 0.1);
+            System.out.println("Axis 7 value (Elevator): " + axisValue); // Debug axis value
+
+            // Lift the elevator using the axis value
+            m_robotElevator.Lift(axisValue);
+        },
+        m_robotElevator // Subsystem requirement
+    )
+).onFalse( // Stop the elevator when Button 1 is released
+    new InstantCommand(() -> {
+        System.out.println("Button 1 released, stopping elevator"); // Debug stop
+        m_robotElevator.Lift(0);
+    }, m_robotElevator)
+);
+
+// Climber control with Button 2
+new Trigger(() -> {
+    boolean buttonPressed = m_driverController.getRawButton(2);
+    System.out.println("Button 2 pressed: " + buttonPressed); // Debug button state
+    return buttonPressed;
+}).whileTrue( // Run while Button 2 is pressed
+    new RunCommand(
+        () -> {
+            // Read the axis value (e.g., throttle) and apply a deadband
+            double axisValue = MathUtil.applyDeadband(m_driverController.getRawAxis(7), 0.1);
+            System.out.println("Axis 7 value (Climber): " + axisValue); // Debug axis value
+
+            // Control the climber using the axis value (scaled by 0.25)
+            m_robotClimber.Climb(axisValue * 0.5);
+        },
+        m_robotClimber // Subsystem requirement
+    )
+).onFalse( // Stop the climber when Button 2 is released
+    new InstantCommand(() -> {
+        System.out.println("Button 2 released, stopping climber"); // Debug stop
+        m_robotClimber.Climb(0);
+    }, m_robotClimber)
+);
+
+new Trigger(() -> {
+  boolean buttonPressed = m_driverController.getRawButton(3);
+  System.out.println("Button 3 pressed: " + buttonPressed); // Debug button state
+  return buttonPressed;
+}).onTrue( // Use onTrue to trigger only once when the button is pressed
+  new InstantCommand(() -> {
+      // Toggle the servo state
+      servoState = !servoState;
+      // Set the servo angle based on the new state
+      m_robotClimber.ServoSet(servoState);
+      // Print the current state
+      System.out.println("Servo set to: " + (servoState ? "180 degrees" : "0 degrees"));
+  }, m_robotClimber) // Subsystem requirement
+);
 
   }
+
+  
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

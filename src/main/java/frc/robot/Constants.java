@@ -134,15 +134,15 @@ public final class Constants {
     public static final int kMaxElevatorHeight = 7;
     public static final int kElevatorDriveMotor1CanId = 11;
     public static final int kElevatorDriveMotor2CanId = 12;
-    public static final int kElevatorEncoderDIOPort1 =  2;
-    public static final int kElevatorEncoderDIOPort2 =  3;
+    public static final int kElevatorEncoderDIOPort1 =  3;
+    public static final int kElevatorEncoderDIOPort2 =  2;
     public static final int kLowerLimitSwitchDIOPort = 0;
     public static final int kUpperLimitSwitchDIOPort = 1;
   }
 
   public static final class ClimberConstants {
-    public static final int kClimberMotorCanId = 101;
-    public static final int kClimberServoDIOPort = 5;
+    public static final int kClimberMotorCanId = 10;
+    public static final int kClimberServoPWMPort = 0;
     public static final double kClimberChainRatio = 10;
     public static final int kClimberMaxLength = 10;
 
