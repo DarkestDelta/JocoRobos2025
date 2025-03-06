@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
@@ -108,7 +109,7 @@ boolean hasTarget = LimelightHelpers.getTV(""); // Do you have a valid target?
     new JoystickButton(m_driverController, Button.kR2.value) // A button
     .whileTrue(new RunCommand(
         () -> m_robotElevator.Lift(m_driverController.getRawAxis(7)),
-        m_robotElevator));
+        m_robotElevator).andThen(print("Working!!"))  );
 
   }
 
@@ -119,7 +120,9 @@ boolean hasTarget = LimelightHelpers.getTV(""); // Do you have a valid target?
    */
   // public Command getAutonomousCommand() {
   //   // Return the AlignHorizontalCommand for autonomous
-
+public Command print(String message) {
+    return new InstantCommand(() -> System.out.println(message));
+}
   
   // }
 
