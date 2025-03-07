@@ -92,20 +92,20 @@ boolean hasTarget = LimelightHelpers.getTV(""); // Do you have a valid target?
   
 new Trigger(() -> {
   boolean buttonPressed = m_driverController.getRawButton(1);
-  System.out.println("Button 1 pressed: " + buttonPressed); // Debug button state
+  // System.out.println("Button 1 pressed: " + buttonPressed); // Debug button state
   return buttonPressed;
 }).whileTrue(
   new RunCommand(
       () -> {
           double axisValue = MathUtil.applyDeadband(m_driverController.getRawAxis(7), 0.1);
-          System.out.println("Axis 7 value (Elevator): " + axisValue); // Debug axis value
+          // System.out.println("Axis 7 value (Elevator): " + axisValue); // Debug axis value
           m_robotElevator.Lift(axisValue);
       },
       m_robotElevator
   )
 ).whileFalse(
   new InstantCommand(() -> {
-      System.out.println("Button 1 released, stopping elevator"); // Debug stop
+      // System.out.println("Button 1 released, stopping elevator"); // Debug stop
       m_robotElevator.Lift(0); // Explicitly stop the elevator
   }, m_robotElevator)
 );
@@ -113,7 +113,7 @@ new Trigger(() -> {
 // Climber control with Button 2
 new Trigger(() -> {
   boolean buttonPressed = m_driverController.getRawButton(2);
-  System.out.println("Button 2 pressed: " + buttonPressed); // Debug button state
+  // System.out.println("Button 2 pressed: " + buttonPressed); // Debug button state
   return buttonPressed;
 }).whileTrue( // Run while Button 2 is pressed
   new RunCommand(
@@ -149,7 +149,7 @@ new Trigger(() -> {
 }).onTrue(new InstantCommand(() -> { // Toggle the intake state
         intakeState = !intakeState;
         m_robotIntake.RaiseIntake(intakeState ? 1 : -1);
-        System.out.println("Intake set to: " + (intakeState ? "Up" : "Down"));
+        // System.out.println("Intake set to: " + (intakeState ? "Up" : "Down"));
     }, m_robotIntake) 
 );
 
@@ -217,6 +217,13 @@ new Trigger(() -> {
    */
   // public Command getAutonomousCommand() {
   //   // Return the AlignHorizontalCommand for autonomous
+
+public Command ResetEncoders() {
+    return new InstantCommand(() -> m_robotIntake.ResetIntakeEncoder(), m_robotIntake)
+        .andThen(new InstantCommand(() -> m_robotEndEffector.ResetBallHolderEncoder(), m_robotEndEffector));
+}
+
+
 public Command print(String message) {
     return new InstantCommand(() -> System.out.println(message));
 }
