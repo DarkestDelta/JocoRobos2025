@@ -115,14 +115,15 @@ public final class Constants {
   }
 
   public static final class EndEffectorConstants {
-    public static final int kLeftOutTakeMotorCanId = 102;
-    public static final int kRightOutTakeMotorCanId = 103;
-    public static final int kBallHolderMotorCanId = 104;
+    public static final int kLeftOutTakeMotorCanId = 14;
+    public static final int kRightOutTakeMotorCanId = 12;
+    public static final int kBallHolderMotorCanId = 13;
+    public static final int kBallGrabberMotorCanId = 11;
     public static final int kBallBolderEncoderDIOPort = 7; // Likely Absolute, which only needs one port
   }
 
   public static final class IntakeConstants {
-    public static final int kIntakeRotationMotorCanId = 105;
+    public static final int kIntakeRotationMotorCanId = 10;
     public static final int kIntakeEncoderDIOPort = 4;  // Likely Absolute, which only needs one port
     
 
@@ -130,8 +131,8 @@ public final class Constants {
   public static final class ElevatorConstants {
     public static final double kElevatorChainRatio = 10;
     public static final int kMaxElevatorHeight = 7;
-    public static final int kElevatorDriveMotor1CanId = 11;
-    public static final int kElevatorDriveMotor2CanId = 12;
+    public static final int kElevatorDriveMotor1CanId = 15;
+    public static final int kElevatorDriveMotor2CanId = 16;
     public static final int kElevatorEncoderDIOPort1 =  3;
     public static final int kElevatorEncoderDIOPort2 =  2;
     public static final int kLowerLimitSwitchDIOPort = 0;

@@ -12,7 +12,7 @@ public class EndEffectorSubsystem extends SubsystemBase{
 SparkMax LeftOuttakeMotor = new SparkMax(EndEffectorConstants.kLeftOutTakeMotorCanId, MotorType.kBrushless);
 SparkMax RightOuttakeMotor = new SparkMax(EndEffectorConstants.kRightOutTakeMotorCanId, MotorType.kBrushless);
 SparkMax BallHolderPivotMotor = new SparkMax(EndEffectorConstants.kBallHolderMotorCanId, MotorType.kBrushless);
-SparkMax BallHolderGrabMotor = new SparkMax(EndEffectorConstants.kBallHolderMotorCanId, MotorType.kBrushless);
+SparkMax BallHolderGrabMotor = new SparkMax(EndEffectorConstants.kBallGrabberMotorCanId, MotorType.kBrushless);
 DutyCycleEncoder BallHolderPivotEncoder = new DutyCycleEncoder(EndEffectorConstants.kBallBolderEncoderDIOPort);
 
 double BallHolderPivotPosition = BallHolderPivotEncoder.get();
@@ -32,9 +32,10 @@ LeftOuttakeMotor.set(-Shootingspeed * .25);
 public void BallHolderGrabMotor(double Speed)
 {BallHolderGrabMotor.set(Speed);}
 
-public void BallHolderPivotMotor(double Speed)
-{BallHolderPivotMotor.set(Speed);}
+public void BallHolderPivotMotor(double Speed, double position)
+{
+    double wantedratio = (position/1);
+    if(Math.abs(BallHolderPivotPosition) < wantedratio)
+    BallHolderPivotMotor.set(Speed * position);}
 
-public void BallHolderDrop(double Speed)
-{BallHolderPivotMotor.set(Speed);}
 }

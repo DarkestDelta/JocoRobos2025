@@ -38,7 +38,7 @@ public class RobotContainer {
   // Pass that instance to ElasticMessages
   private final ElasticMessages elasticMessages = new ElasticMessages(m_robotElevator);
   private final IntakeSubsystem m_robotIntake = new IntakeSubsystem();
-  // private final EndEffectorSubsystem m_robotEndEffector = new EndEffectorSubsystem();
+  private final EndEffectorSubsystem m_robotEndEffector = new EndEffectorSubsystem();
   
   
   // The driver's controller
@@ -152,6 +152,59 @@ new Trigger(() -> {
         System.out.println("Intake set to: " + (intakeState ? "Up" : "Down"));
     }, m_robotIntake) 
 );
+
+
+new Trigger(() -> {
+  boolean buttonPressed = m_driverController.getRawButton(4);
+  return buttonPressed;
+}).whileTrue(
+  new RunCommand(
+      () -> {
+        m_robotEndEffector.Shoot(.25);
+        
+      },
+      m_robotEndEffector
+  )
+).whileFalse(
+  new InstantCommand(() -> {
+      m_robotEndEffector.Shoot(.0); // Explicitly stop the elevator
+  }, m_robotEndEffector)
+);
+
+new Trigger(() -> {
+  boolean buttonPressed = m_driverController.getRawButton(5);
+  return buttonPressed;
+}).whileTrue(
+  new RunCommand(
+      () -> {
+        double axis =  m_driverController.getRawAxis(7);
+        m_robotEndEffector.BallHolderPivotMotor(.25, axis);
+      }, m_robotEndEffector)
+).whileFalse(
+  new InstantCommand(() -> {
+    double axis =  m_driverController.getRawAxis(7);
+      m_robotEndEffector.BallHolderPivotMotor(0, axis); 
+  }, m_robotEndEffector)
+);
+
+new Trigger(() -> {
+  boolean buttonPressed = m_driverController.getRawButton(4);
+  return buttonPressed;
+}).whileTrue(
+  new RunCommand(
+      () -> {
+        m_robotEndEffector.BallHolderGrabMotor(.25);
+        
+      },
+      m_robotEndEffector
+  )
+).whileFalse(
+  new InstantCommand(() -> {
+    m_robotEndEffector.BallHolderGrabMotor(0); // Explicitly stop the elevator
+  }, m_robotEndEffector)
+);
+
+
 
 
   }
