@@ -50,7 +50,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
-    m_robotElevator.init();
+
     // Configure default commands ``
     m_robotDrive.setDefaultCommand(
         // The left stick controls translation of the robot.
@@ -99,13 +99,13 @@ new Trigger(() -> {
       () -> {
           double axisValue = MathUtil.applyDeadband(m_driverController.getRawAxis(7), 0.1);
           // System.out.println("Axis 7 value (Elevator): " + axisValue); // Debug axis value
-          m_robotElevator.Lift(axisValue);
+          m_robotElevator.Lift(1);
       },
       m_robotElevator
   )
 ).whileFalse(
   new InstantCommand(() -> {
-      // System.out.println("Button 1 released, stopping elevator"); // Debug stop
+       System.out.println("Button 1 released, stopping elevator"); // Debug stop
       m_robotElevator.Lift(0); // Explicitly stop the elevator
   }, m_robotElevator)
 );
@@ -127,31 +127,34 @@ new Trigger(() -> {
   new InstantCommand(() -> {
       // System.out.println("Button 2 released, stopping climber"); // Debug stop
       m_robotClimber.Climb(0); // Stop the climber
-  }, m_robotClimber).andThen( // Chain the ServoSet command
-      new InstantCommand(() -> {
-          m_robotClimber.ServoSet(false); // Set the servo to false
-      }, m_robotClimber) // Subsystem requirement
-  )
+  }, m_robotClimber)
 );
+// .andThen( // Chain the ServoSet command
+//       new InstantCommand(() -> {
+//           m_robotClimber.ServoSet(false); // Set the servo to false
+//       }, m_robotClimber) // Subsystem requirement
+//   )
+
 
 new Trigger(() -> {
   boolean buttonPressed = m_driverController.getRawButton(8);
   return buttonPressed;
-}).onTrue( new InstantCommand(() -> {
+}).onTrue(new InstantCommand(() -> {
       servoState = !servoState;
       m_robotClimber.ServoSet(servoState);
   }, m_robotClimber) 
 );
+// Updated Trigger code (in RobotContainer)
+new Trigger(() -> m_driverController.getRawButton(3))
+    .whileTrue(new RunCommand(() -> {
+      double axisValue = m_driverController.getRawAxis(7);
+      m_robotIntake.RaiseIntake(axisValue);
+    }, m_robotIntake)
+      
+  )
+    .whileFalse(new RunCommand(() -> m_robotIntake.RaiseIntake(0)));
 
-new Trigger(() -> {
-    boolean buttonPressed = m_driverController.getRawButton(3);
-    return buttonPressed;
-}).onTrue(new InstantCommand(() -> { // Toggle the intake state
-        intakeState = !intakeState;
-        m_robotIntake.RaiseIntake(intakeState ? 1 : -1);
-        // System.out.println("Intake set to: " + (intakeState ? "Up" : "Down"));
-    }, m_robotIntake) 
-);
+
 
 
 new Trigger(() -> {
@@ -188,7 +191,7 @@ new Trigger(() -> {
 );
 
 new Trigger(() -> {
-  boolean buttonPressed = m_driverController.getRawButton(4);
+  boolean buttonPressed = m_driverController.getRawButton(6);
   return buttonPressed;
 }).whileTrue(
   new RunCommand(
@@ -218,10 +221,8 @@ new Trigger(() -> {
   // public Command getAutonomousCommand() {
   //   // Return the AlignHorizontalCommand for autonomous
 
-public Command ResetEncoders() {
-    return new InstantCommand(() -> m_robotIntake.ResetIntakeEncoder(), m_robotIntake)
-        .andThen(new InstantCommand(() -> m_robotEndEffector.ResetBallHolderEncoder(), m_robotEndEffector));
-}
+
+
 
 
 public Command print(String message) {

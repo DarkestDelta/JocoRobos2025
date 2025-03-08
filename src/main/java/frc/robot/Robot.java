@@ -35,7 +35,7 @@ public class Robot extends TimedRobot {
  m_robotContainer = new RobotContainer();
  // Now that m_robotContainer is initialized, pass its ElevatorSubsystem instance to ElasticMessages.
  elasticMessages = new ElasticMessages(m_robotContainer.getElevatorSubsystem());
-m_robotContainer.ResetEncoders();
+
 
 
   }

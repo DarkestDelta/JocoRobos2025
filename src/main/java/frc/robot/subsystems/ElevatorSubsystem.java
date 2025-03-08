@@ -34,47 +34,41 @@ public double ElevatorPosition()
         return ElevatorEncoder.getDistance();
     }
 
-    public void init() {
-        ElevatorDriveMotor1.set(0); // Stop the motor
-        ElevatorEncoder.reset(); // Reset the encoder
-    }
+
 
 public void Lift(double LiftSpeed)
     {
     // System.out.println("Lower:" + GetLowerLimitSwitch());
     // System.out.println("Upper:" + GetUpperLimitSwitch());
 
-    // ElevatorDriveMotor1.set(LiftSpeed*.25);
+    ElevatorDriveMotor1.set(LiftSpeed*.25);
+    
 
-    if (LiftSpeed == 0) {
-        ElevatorDriveMotor1.set(0); // Stop the motor if LiftSpeed is 0
-        return;
-    }
-    switch(GetLiftCase(LiftSpeed))
-    {
-    case 1:
-        ElevatorDriveMotor1.set(.15);
-        break;
+    // switch(GetLiftCase(LiftSpeed))
+    // {
+    // case 1:
+    //     ElevatorDriveMotor1.set(.15);
+    //     break;
 
-    case 2:
-        ElevatorDriveMotor1.set(0);
-        break;
-        //TODO: add a notif error using elastic. 
+    // case 2:
+    //     ElevatorDriveMotor1.set(0);
+    //     break;
+    //     //TODO: add a notif error using elastic. 
 
-    case 3:
-        ElevatorDriveMotor1.set(0);
-        break;
-        //TODO: add a notif error using elastic.
+    // case 3:
+    //     ElevatorDriveMotor1.set(0);
+    //     break;
+    //     //TODO: add a notif error using elastic.
 
-    case 4:
-        ElevatorDriveMotor1.set(.15);
-        break;
+    // case 4:
+    //     ElevatorDriveMotor1.set(.15);
+    //     break;
 
-    case 5:
-        ElevatorDriveMotor1.set(.15);
-        System.out.println("You got here!");
-        break;
-    }
+    // case 5:
+    //     ElevatorDriveMotor1.set(.15);
+    //     System.out.println("You got here!");
+    //     break;
+    // }
     }
 
 public int GetLiftCase(double LiftSpeed)

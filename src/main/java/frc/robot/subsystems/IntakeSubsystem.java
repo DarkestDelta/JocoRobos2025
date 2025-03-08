@@ -1,8 +1,10 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 
@@ -15,11 +17,11 @@ double FinalRaiseSpeed = 0;
     private double encoderOffset = 0; // Track the offset manually
     private double Intakeposition = 0; // Current position relative to the offset
 
-    public void RaiseIntake(int Direction) { // Positive int = raise, negative = lower, 0 = stop
-        IntakeMotor.set(CalculateFinalRaiseSpeed(Direction));
+    public void RaiseIntake(double Direction) { // Positive int = raise, negative = lower, 0 = stop
+        IntakeMotor.set(Direction);
     }
 
-    public double CalculateFinalRaiseSpeed(int Direction) {
+    public double CalculateFinalRaiseSpeed(double Direction) {
         // Update the intake position relative to the offset
         Intakeposition = IntakeEncoder.get() - encoderOffset;
 
@@ -33,22 +35,10 @@ double FinalRaiseSpeed = 0;
         return FinalRaiseSpeed * .1;
     }
 
-    public void ResetIntakeEncoder() {
-        // Get the current absolute position of the encoder
-        double currentPosition = IntakeEncoder.get();
-
-        // Set the offset to make the current position the new zero
-        encoderOffset = currentPosition;
-
-        // Update the Intakeposition variable
-        Intakeposition = 0; // Since we've reset the encoder, the position is now 0
-
-        System.out.println("Intake Encoder Reset to: " + Intakeposition);
-    }
 
     public double GetIntakePosition() {
         // Calculate the position relative to the offset
-        Intakeposition = IntakeEncoder.get() - encoderOffset;
+        Intakeposition = IntakeEncoder.get();
         return Intakeposition;
     }
 }
