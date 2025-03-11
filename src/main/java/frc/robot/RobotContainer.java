@@ -163,7 +163,7 @@ new Trigger(() -> {
 }).whileTrue(
   new RunCommand(
       () -> {
-        m_robotEndEffector.Shoot(.25);
+        m_robotEndEffector.Shoot(.75);
         
       },
       m_robotEndEffector

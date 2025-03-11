@@ -1,11 +1,11 @@
 package frc.robot.subsystems;
-import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
+
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
-import java.lang.Math;
 
 public class ElevatorSubsystem extends SubsystemBase{
 
@@ -41,34 +41,34 @@ public void Lift(double LiftSpeed)
     // System.out.println("Lower:" + GetLowerLimitSwitch());
     // System.out.println("Upper:" + GetUpperLimitSwitch());
 
-    ElevatorDriveMotor1.set(LiftSpeed*.25);
+    // ElevatorDriveMotor1.set(LiftSpeed*.25);
     
 
-    // switch(GetLiftCase(LiftSpeed))
-    // {
-    // case 1:
-    //     ElevatorDriveMotor1.set(.15);
-    //     break;
+    switch(GetLiftCase(LiftSpeed))
+    {
+    case 1:
+        ElevatorDriveMotor1.set(.15);
+        break;
 
-    // case 2:
-    //     ElevatorDriveMotor1.set(0);
-    //     break;
-    //     //TODO: add a notif error using elastic. 
+    case 2:
+        ElevatorDriveMotor1.set(0);
+        break;
+        //TODO: add a notif error using elastic. 
 
-    // case 3:
-    //     ElevatorDriveMotor1.set(0);
-    //     break;
-    //     //TODO: add a notif error using elastic.
+    case 3:
+        ElevatorDriveMotor1.set(0);
+        break;
+        //TODO: add a notif error using elastic.
 
-    // case 4:
-    //     ElevatorDriveMotor1.set(.15);
-    //     break;
+    case 4:
+        ElevatorDriveMotor1.set(.15);
+        break;
 
-    // case 5:
-    //     ElevatorDriveMotor1.set(.15);
-    //     System.out.println("You got here!");
-    //     break;
-    // }
+    case 5:
+        ElevatorDriveMotor1.set(.15);
+        System.out.println("You got here!");
+        break;
+    }
     }
 
 public int GetLiftCase(double LiftSpeed)
@@ -103,13 +103,13 @@ public double CalculateFinalLiftSpeed(double LiftSpeed)
     {
     double ElevatorPositionPercentage = (ElevatorPosition()/ElevatorConstants.kMaxElevatorHeight);
     if (LiftSpeed > 0)
-    {FinalLiftSpeed = Math.pow((ElevatorPositionPercentage + 1), 2);}
+    {FinalLiftSpeed = (-.5 * (ElevatorPositionPercentage) + .5);}
     else if (LiftSpeed < 0)
-    {FinalLiftSpeed = Math.pow(ElevatorPositionPercentage, 2);}
+    {FinalLiftSpeed = (.5 * (ElevatorPositionPercentage));}
     else
     {FinalLiftSpeed = 0;}
 
-    return .15;
+    return FinalLiftSpeed;
     }
 
 

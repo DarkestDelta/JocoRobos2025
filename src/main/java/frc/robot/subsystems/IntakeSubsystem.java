@@ -1,10 +1,6 @@
 package frc.robot.subsystems;
-
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
-
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 
@@ -13,17 +9,16 @@ double FinalRaiseSpeed = 0;
 
     WPI_VictorSPX IntakeMotor = new WPI_VictorSPX(IntakeConstants.kIntakeRotationMotorCanId);
     DutyCycleEncoder IntakeEncoder = new DutyCycleEncoder(IntakeConstants.kIntakeEncoderDIOPort);
-
-    private double encoderOffset = 0; // Track the offset manually
+    
     private double Intakeposition = 0; // Current position relative to the offset
 
     public void RaiseIntake(double Direction) { // Positive int = raise, negative = lower, 0 = stop
-        IntakeMotor.set(Direction);
+        IntakeMotor.set(CalculateFinalRaiseSpeed(Direction));
     }
 
     public double CalculateFinalRaiseSpeed(double Direction) {
         // Update the intake position relative to the offset
-        Intakeposition = IntakeEncoder.get() - encoderOffset;
+        Intakeposition = IntakeEncoder.get();
 
         if (Direction > 0 && Intakeposition <= .235) {
             FinalRaiseSpeed = ((-4.237 * (Intakeposition)) + 1);
@@ -32,7 +27,7 @@ double FinalRaiseSpeed = 0;
         } else {
             FinalRaiseSpeed = 0;
         }
-        return FinalRaiseSpeed * .1;
+        return FinalRaiseSpeed * .25;
     }
 
 

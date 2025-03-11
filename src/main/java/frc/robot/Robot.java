@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.util.ElasticMessages;
+import edu.wpi.first.cameraserver.CameraServer;
+
 
 
 /**
@@ -36,6 +38,9 @@ public class Robot extends TimedRobot {
  // Now that m_robotContainer is initialized, pass its ElevatorSubsystem instance to ElasticMessages.
  elasticMessages = new ElasticMessages(m_robotContainer.getElevatorSubsystem());
 
+ var camera = CameraServer.startAutomaticCapture();
+    
+ // Optionally, set the camera resolution (for example, 640x480)
 
 
   }
