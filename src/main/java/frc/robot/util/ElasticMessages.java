@@ -15,12 +15,12 @@ import frc.robot.util.Elastic.Notification.NotificationLevel;
 public class ElasticMessages {
 
     // Remove the direct instantiation of ElevatorSubsystem.
-    private ElevatorSubsystem elevator;
+    // private ElevatorSubsystem elevator;
 
-    // Accept an ElevatorSubsystem instance in the constructor.
-    public ElasticMessages(ElevatorSubsystem elevator) {
-        this.elevator = elevator;
-    }
+    // // Accept an ElevatorSubsystem instance in the constructor.
+    // public ElasticMessages(ElevatorSubsystem elevator) {
+    //     this.elevator = elevator;
+    // }
 
 
 // private EndEffectorSubsystem EndEffector = new EndEffectorSubsystem();
@@ -33,15 +33,15 @@ Elastic.Notification ClimberNotif = new Elastic.Notification();
 public void DisplayAllMessages() // This is meant for a simple one time call. Do this unless there are issues. 
 {
 DisplayMatchInfo();
-DisplayLimitSwitchStates();
-DisplayElevatorPosition();
+// DisplayLimitSwitchStates();
+// DisplayElevatorPosition();
 
 }
 
-void DisplayElevatorPosition()
-{
-SmartDashboard.putNumber("Elevator Position: ", elevator.ElevatorPosition());
-}
+// void DisplayElevatorPosition()
+// {
+// SmartDashboard.putNumber("Elevator Position: ", elevator.ElevatorPosition());
+// }
 
 void DisplayMatchInfo()
 {
@@ -51,11 +51,11 @@ SmartDashboard.putNumber("Match Number", DriverStation.getMatchNumber());
 SmartDashboard.putString("Game Message", DriverStation.getGameSpecificMessage());
 }
 
-void DisplayLimitSwitchStates()
-{
-SmartDashboard.putBoolean("Lower Limit Switch", elevator.GetLowerLimitSwitch());
-SmartDashboard.putBoolean("Upper Limit Switch", elevator.GetUpperLimitSwitch());
-}
+// void DisplayLimitSwitchStates()
+// {
+// SmartDashboard.putBoolean("Lower Limit Switch", elevator.GetLowerLimitSwitch());
+// SmartDashboard.putBoolean("Upper Limit Switch", elevator.GetUpperLimitSwitch());
+// }
 
 public void ClimberCantGoUp()
 {

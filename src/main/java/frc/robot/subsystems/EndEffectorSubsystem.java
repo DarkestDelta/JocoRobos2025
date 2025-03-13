@@ -19,8 +19,8 @@ public class EndEffectorSubsystem extends SubsystemBase {
     private double BallHolderPivotPosition = 0; // Current position relative to the offset
 
     public void Shoot(double Shootingspeed) {
-        RightOuttakeMotor.set(Shootingspeed);
-        LeftOuttakeMotor.set(-Shootingspeed);
+        RightOuttakeMotor.set(Shootingspeed *.5);
+        LeftOuttakeMotor.set(-Shootingspeed * 1.5);
     }
 
     public void L1Shoot(double Shootingspeed) {

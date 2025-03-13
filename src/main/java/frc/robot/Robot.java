@@ -36,11 +36,9 @@ public class Robot extends TimedRobot {
  // Instantiate our RobotContainer.
  m_robotContainer = new RobotContainer();
  // Now that m_robotContainer is initialized, pass its ElevatorSubsystem instance to ElasticMessages.
- elasticMessages = new ElasticMessages(m_robotContainer.getElevatorSubsystem());
+//  elasticMessages = new ElasticMessages(m_robotContainer.getElevatorSubsystem());
 
- var camera = CameraServer.startAutomaticCapture();
-    
- // Optionally, set the camera resolution (for example, 640x480)
+//  var camera = CameraServer.startAutomaticCapture();
 
 
   }
@@ -61,7 +59,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     // System.out.println("Scheduled commands: " + CommandScheduler.getInstance().);
     // System.out.println("yes");
-    elasticMessages.DisplayAllMessages();
+    // elasticMessages.DisplayAllMessages();
     // System.out.println("Button 1: " + m_robotContainer.m_driverController.getRawButton(1));
     // System.out.println("Button 2: " + m_robotContainer.m_driverController.getRawButton(2));
     // System.out.println("Button 3: " + m_robotContainer.m_driverController.getRawButton(3));
@@ -71,11 +69,14 @@ public class Robot extends TimedRobot {
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+
+  }
 
   @Override
   public void disabledPeriodic() {}
 
+    // CommandScheduler.getInstance().disable();
 
     Double x = 0.250;
     Double y = 0.0;
@@ -85,7 +86,7 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     timer.reset();
     timer.start();
-    m_autonomousCommand = m_robotContainer.BasicAutoFollow();
+    // m_autonomousCommand = m_robotContainer.BasicAutoFollow();
 
     /*
      * String autoSelected = SmartDashboard.getString("Auto Selector",

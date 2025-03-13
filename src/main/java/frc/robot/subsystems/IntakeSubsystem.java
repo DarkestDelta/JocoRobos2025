@@ -13,7 +13,7 @@ double FinalRaiseSpeed = 0;
     private double Intakeposition = 0; // Current position relative to the offset
 
     public void RaiseIntake(double Direction) { // Positive int = raise, negative = lower, 0 = stop
-        IntakeMotor.set(CalculateFinalRaiseSpeed(Direction));
+        IntakeMotor.set(Direction);
     }
 
     public double CalculateFinalRaiseSpeed(double Direction) {

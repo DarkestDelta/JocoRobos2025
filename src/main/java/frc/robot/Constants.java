@@ -141,7 +141,7 @@ public final class Constants {
 
   public static final class ClimberConstants {
     public static final int kClimberMotorCanId = 10;
-    public static final int kClimberServoPWMPort = 0;
+    public static final int kClimberServoPWMPort = 4;
     public static final double kClimberChainRatio = 10;
     public static final int kClimberMaxLength = 10;
 
