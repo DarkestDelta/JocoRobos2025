@@ -55,18 +55,11 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
-    // commands, running already-scheduled commands, removing finished or interrupted commands,
-    // and running subsystem periodic() methods.  This must be called from the robot's periodic
-    // block in order for anything in the Command-based framework to work.
+
     CommandScheduler.getInstance().run();
-    // System.out.println("Scheduled commands: " + CommandScheduler.getInstance().);
-    // System.out.println("yes");
+
     // elasticMessages.DisplayAllMessages();
-    // System.out.println("Button 1: " + m_robotContainer.m_driverController.getRawButton(1));
-    // System.out.println("Button 2: " + m_robotContainer.m_driverController.getRawButton(2));
-    // System.out.println("Button 3: " + m_robotContainer.m_driverController.getRawButton(3));
-    
+
 
   }
 
@@ -98,6 +91,8 @@ public class Robot extends TimedRobot {
      * autonomousCommand = new ExampleCommand(); break; }
      * 
      */
+
+    m_autonomousCommand = m_robotContainer.m_autonomousCommand();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {

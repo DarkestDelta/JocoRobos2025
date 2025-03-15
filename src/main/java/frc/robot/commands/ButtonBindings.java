@@ -1,12 +1,10 @@
 package frc.robot.commands;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.RobotContainer;
-import frc.robot.Vision.LimelightHelpers;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -51,13 +49,22 @@ public class ButtonBindings {
     private final ElevatorTargetCommand elevatorBall2;
 
     public void configureButtonBindings() {
+        ElevatorBindings();
+
+         new Trigger(() -> m_ButtonController.getRawButton(15))
+        .onTrue(new InstantCommand(() -> m_robotEndEffector.SetBallHolderPivotMotor(-0.1), m_robotEndEffector));
+
+        new Trigger(() -> m_ButtonController.getRawButton(3))
+        .whileTrue(new RunCommand(() -> m_robotEndEffector.Shoot(-.15), m_robotEndEffector))
+        .whileFalse(new InstantCommand(() -> m_robotEndEffector.Shoot(0.0), m_robotEndEffector));
+
         new Trigger(() -> m_ButtonController.getRawButton(4))
-            .whileTrue(new RunCommand(() -> m_robotEndEffector.Shoot(0.15), m_robotEndEffector))
-            .whileFalse(new InstantCommand(() -> m_robotEndEffector.Shoot(0.0), m_robotEndEffector));
+            .whileTrue(new RunCommand(() -> m_robotEndEffector.Shoot(.15), m_robotEndEffector))
+            .whileFalse(new InstantCommand(() -> m_robotEndEffector.Shoot(.0), m_robotEndEffector));
 
         new Trigger(() -> m_ButtonController.getRawButton(5))
-            .whileTrue(new RunCommand(() -> m_robotEndEffector.Shoot(0.45), m_robotEndEffector))
-            .whileFalse(new InstantCommand(() -> m_robotEndEffector.Shoot(0.0), m_robotEndEffector));
+            .whileTrue(new RunCommand(() -> m_robotEndEffector.Shoot(.45), m_robotEndEffector))
+            .whileFalse(new InstantCommand(() -> m_robotEndEffector.Shoot(.0), m_robotEndEffector));
 
         new Trigger(() -> m_driverController.getRawButton(7))
             .whileTrue(new RunCommand(() -> {
@@ -97,8 +104,8 @@ public class ButtonBindings {
                 m_robotEndEffector.SetBallHolderPivotMotor(0);
             }, m_robotEndEffector));
 
-        new Trigger(() -> m_ButtonController.getRawButton(19)) // Negative axis for up
-            .whileTrue(new RunCommand(() -> m_robotIntake.RaiseIntake(-0.25), m_robotIntake))
+        new Trigger(() -> m_ButtonController.getRawButton(19)) 
+            .whileTrue(new RunCommand(() -> m_robotIntake.RaiseIntake(0.15), m_robotIntake))
             .whileFalse(new InstantCommand(() -> m_robotIntake.RaiseIntake(0.0), m_robotIntake));
     }
 

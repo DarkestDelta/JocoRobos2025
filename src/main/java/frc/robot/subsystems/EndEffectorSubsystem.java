@@ -20,8 +20,8 @@ public class EndEffectorSubsystem extends SubsystemBase {
   
 
     public void Shoot(double Shootingspeed) {
-        RightOuttakeMotor.set(Shootingspeed);
-        LeftOuttakeMotor.set(-Shootingspeed);
+        RightOuttakeMotor.set(-Shootingspeed);
+        // LeftOuttakeMotor.set(Shootingspeed);
     }
 
     public void L1Shoot(double Shootingspeed) {

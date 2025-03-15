@@ -9,7 +9,7 @@ public class ElevatorTargetCommand extends Command {
     private final double targetRotations;
     private final double baseSpeed;
     private final double holdTime; // Time to hold (seconds)
-    private final double holdVoltage; // Voltage to hold position (e.g., 0.1)
+    private final double holdSpeed; // Voltage to hold position (e.g., 0.1)
     private final Timer holdTimer = new Timer();
     private boolean targetReached = false;
     private long lastShotTime = 0; // Store last shot time
@@ -19,13 +19,13 @@ public class ElevatorTargetCommand extends Command {
         double targetRotations,
         double baseSpeed,
         double holdTime,
-        double holdVoltage
+        double holdSpeed
     ) {
         this.elevator = elevator;
         this.targetRotations = targetRotations;
         this.baseSpeed = baseSpeed;
         this.holdTime = holdTime;
-        this.holdVoltage = holdVoltage;
+        this.holdSpeed = holdSpeed;
         addRequirements(elevator);
     }
 
@@ -47,14 +47,14 @@ public class ElevatorTargetCommand extends Command {
   
 
             double error = currentPos - targetRotations;
-            if ((error <= 0.25 && error >= 0) || error >= .25) { // Tolerance of 0.1 rotations
+            if ((error <= 0.25 && error >= 0) || error >= .25) { // Tolerance of 0.25 rotations
                 targetReached = true;
                 holdTimer.start(); // Start the hold timer
                 
             }
         } else {
             // Apply a small voltage to hold position
-            elevator.lift(holdVoltage);        }
+            elevator.lift(holdSpeed);        }
     }
 
     
