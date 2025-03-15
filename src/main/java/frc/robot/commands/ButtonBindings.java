@@ -32,12 +32,13 @@ public class ButtonBindings {
         this.LLComand = container.LLCom;
 
         elevatorL1 = new ElevatorTargetCommand(m_robotElevator, 44, 0.5, 1.5, 0.1);
-        elevatorL2 = new ElevatorTargetCommand(m_robotElevator, 44, 0.5, 1.5, 0.1);
+        elevatorL2 = new ElevatorTargetCommand(m_robotElevator, 14, 0.5, 1.5, 0.1);
         elevatorL3 = new ElevatorTargetCommand(m_robotElevator, 44, 0.5, 1.5, 0.1);
-        elevatorL4 = new ElevatorTargetCommand(m_robotElevator, 95, 0.5, 1.5, 0.1);
+        elevatorL4 = new ElevatorTargetCommand(m_robotElevator, 94, 0.5, 1.5, 0.1);
         elevatorBall1 = new ElevatorTargetCommand(m_robotElevator, 30, 0.5, 3, 0.1);
         elevatorBall2 = new ElevatorTargetCommand(m_robotElevator, 44, 0.5, 3, 0.1);
     }
+
 
     private boolean servoState = false;
 
@@ -50,6 +51,10 @@ public class ButtonBindings {
 
     public void configureButtonBindings() {
         ElevatorBindings();
+
+        new Trigger(() -> m_ButtonController.getRawButton(16))
+        .whileTrue(new RunCommand(() -> m_robotElevator.lift(-.1), m_robotElevator))
+        .whileFalse(new InstantCommand(() -> m_robotElevator.lift(0), m_robotElevator));
 
          new Trigger(() -> m_ButtonController.getRawButton(15))
         .onTrue(new InstantCommand(() -> m_robotEndEffector.SetBallHolderPivotMotor(-0.1), m_robotEndEffector));
@@ -116,8 +121,13 @@ public class ButtonBindings {
         new Trigger(() -> m_ButtonController.getRawButton(7)).onTrue(elevatorL3);
         new Trigger(() -> m_ButtonController.getRawButton(8)).onTrue(elevatorL4);
 
-        new Trigger(() -> elevatorL4.isTargetReached() || elevatorL3.isTargetReached() || elevatorL2.isTargetReached())
-            .onTrue(new RunCommand(() -> m_robotEndEffector.Shoot(0.45), m_robotEndEffector)
+        new Trigger(() -> elevatorL3.isTargetReached() || elevatorL2.isTargetReached())
+        .onTrue(new RunCommand(() -> m_robotEndEffector.Shoot(0.35), m_robotEndEffector)
+            .withTimeout(1.25)
+            .andThen(new InstantCommand(() -> m_robotEndEffector.Shoot(0), m_robotEndEffector)));
+
+        new Trigger(() -> elevatorL4.isTargetReached())
+            .onTrue(new RunCommand(() -> m_robotEndEffector.Shoot(0.25), m_robotEndEffector)
                 .withTimeout(1.25)
                 .andThen(new InstantCommand(() -> m_robotEndEffector.Shoot(0), m_robotEndEffector)));
     }
