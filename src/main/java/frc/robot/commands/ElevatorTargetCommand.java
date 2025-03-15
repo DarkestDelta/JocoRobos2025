@@ -12,6 +12,7 @@ public class ElevatorTargetCommand extends Command {
     private final double holdVoltage; // Voltage to hold position (e.g., 0.1)
     private final Timer holdTimer = new Timer();
     private boolean targetReached = false;
+    private long lastShotTime = 0; // Store last shot time
 
     public ElevatorTargetCommand(
         ElevatorSubsystem elevator,
@@ -32,7 +33,7 @@ public class ElevatorTargetCommand extends Command {
     public void initialize() {
         holdTimer.reset();
         targetReached = false;
-        System.out.println("Starting ElevatorTargetCommand. Target: " + targetRotations);
+
     }
 
     @Override
@@ -43,22 +44,45 @@ public class ElevatorTargetCommand extends Command {
 
             // Check if target is reached
             double currentPos = elevator.getElevatorPosition();
+  
+
             double error = currentPos - targetRotations;
             if ((error <= 0.25 && error >= 0) || error >= .25) { // Tolerance of 0.1 rotations
                 targetReached = true;
                 holdTimer.start(); // Start the hold timer
-                System.out.println("Target reached. Starting hold timer.");
+                
             }
         } else {
             // Apply a small voltage to hold position
             elevator.lift(holdVoltage);        }
     }
 
+    
+   
+
     @Override
-    public boolean isFinished() {
-        // End the command after the hold time elapses
-        return targetReached && holdTimer.hasElapsed(holdTime);
+public boolean isFinished() {
+    boolean finished = holdTimer.get() >= holdTime;
+    if (finished) {
+        targetReached = false;  // Reset for the next cycle
+        lastShotTime = System.currentTimeMillis(); // Store time when shot happens
+        System.out.println("Elevator Command Finished. Resetting isTargetReached(). Cooldown started.");
     }
+    return finished;
+}
+
+public boolean isTargetReached() {
+    long cooldownPeriod = 2000; // 2-second cooldown before re-triggering
+    boolean shouldTrigger = targetReached && (System.currentTimeMillis() - lastShotTime > cooldownPeriod);
+
+    if (shouldTrigger) {
+        System.out.println("Triggering Shoot - Cooldown Complete");
+    }
+
+    return shouldTrigger;
+}
+
+
 
     @Override
     public void end(boolean interrupted) {
@@ -67,7 +91,9 @@ public class ElevatorTargetCommand extends Command {
         System.out.println("ElevatorTargetCommand ended.");
     }
 
-    public boolean isTargetReached() {
-        return targetReached;
-    }
+    
+
+
+    
+
 }

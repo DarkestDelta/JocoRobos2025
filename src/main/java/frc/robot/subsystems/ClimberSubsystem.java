@@ -31,9 +31,9 @@ public void Climb(double ClimbingSpeed)
 public void ServoSet(boolean State)
 {
 if (State)
-{ClimbLock.setAngle(180);}
-else
 {ClimbLock.setAngle(0);}
+else
+{ClimbLock.setAngle(180);}
 
 }
 }

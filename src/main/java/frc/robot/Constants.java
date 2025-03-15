@@ -92,6 +92,7 @@ public final class Constants {
 
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
+    public static final int kButtonControllerPort = 1;
     public static final double kDriveDeadband = 0.05;
   }
 
@@ -119,7 +120,7 @@ public final class Constants {
     public static final int kRightOutTakeMotorCanId = 12;
     public static final int kBallHolderMotorCanId = 13;
     public static final int kBallGrabberMotorCanId = 11;
-    public static final int kBallBolderEncoderDIOPort = 7; // Likely Absolute, which only needs one port
+    public static final int kBallBolderEncoderDIOPort = 5; // Likely Absolute, which only needs one port
   }
 
   public static final class IntakeConstants {
