@@ -6,10 +6,12 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.util.ElasticMessages;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Servo;
 
 
@@ -61,6 +63,15 @@ public class Robot extends TimedRobot {
     // elasticMessages.DisplayAllMessages();
 
 
+
+
+SmartDashboard.putNumber("Match Time", DriverStation.getMatchTime());
+SmartDashboard.putString("Event Name", DriverStation.getEventName());
+SmartDashboard.putNumber("Match Number", DriverStation.getMatchNumber());
+SmartDashboard.putString("Game Message", DriverStation.getGameSpecificMessage());
+
+
+
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -82,23 +93,11 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     timer.reset();
     timer.start();
-    // m_autonomousCommand = m_robotContainer.BasicAutoFollow();
-
-    /*
-     * String autoSelected = SmartDashboard.getString("Auto Selector",
-     * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
-     * = new MyAutoCommand(); break; case "Default Auto": default:
-     * autonomousCommand = new ExampleCommand(); break; }
-     * 
-     */
-
     m_autonomousCommand = m_robotContainer.m_autonomousCommand();
-
-    // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
+        m_autonomousCommand.schedule();
     }
-  }
+}
 
   /** This function is called periodically during autonomous. */
   @Override
@@ -116,7 +115,7 @@ public class Robot extends TimedRobot {
 // }
 // CommandScheduler.getInstance().run();
 
-//     // m_autonomousCommand = m_robotContainer.DriveAuto(x, drivex, z).repeatedly();
+    m_autonomousCommand = m_robotContainer.m_autonomousCommand().withTimeout(8);
 //     System.out.println("TX: " + tx + ", Target: " + hasTarget);
     //  m_robotContainer.DriveAuto(x, y, z);
       // m_autonomousCommand = m_robotContainer.DriveAuto(x, z);
