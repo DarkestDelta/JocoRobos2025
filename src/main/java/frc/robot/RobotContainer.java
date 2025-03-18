@@ -12,8 +12,10 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.Constants.AutoConstants;
@@ -37,6 +39,7 @@ public class RobotContainer {
     
     public Joystick m_driverController;
     public Joystick m_ButtonController;
+    public XboxController m_XboxDriverController;
     
     public ButtonBindings buttons;
     public LimeLightCommands LLCom;
@@ -52,7 +55,7 @@ public class RobotContainer {
         buttons.configureButtonBindings();
         
         m_robotDrive.setDefaultCommand(
-            new RunCommand(() -> m_robotDrive.drive(C1Y(), C1X(), C1Z(), true), m_robotDrive));
+            new RunCommand(() -> m_robotDrive.drive(C1Y(), C1X(), C1Z(), false), m_robotDrive));
 
             
     }
@@ -75,8 +78,16 @@ public class RobotContainer {
     }
 
     private double C1Z() {
-        return -MathUtil.applyDeadband(m_driverController.getZ() * LiftSlider(), OIConstants.kDriveDeadband);
+        return -MathUtil.applyDeadband(
+            // m_driverController.getRawAxis(3)
+            m_driverController.getZ()
+             * LiftSlider(), OIConstants.kDriveDeadband);
     }
+
+    
+
+
+
 
     private double LiftSlider() {
         return ((m_driverController.getRawAxis(5) + 1) / 2);
@@ -99,11 +110,15 @@ public class RobotContainer {
 
 
     public Command m_autonomousCommand() {
-        return new RunCommand(() -> m_robotDrive.drive(0.25, 0.0, 0.0, true), m_robotDrive).withTimeout(4).alongWith(
-            new InstantCommand(() ->  m_robotEndEffector.SetBallHolderPivotMotor(-.1), m_robotEndEffector))
-        
-        .andThen(
-               new InstantCommand(() -> m_robotEndEffector.Shoot(.15), m_robotEndEffector).withTimeout(3));
+        return new ParallelCommandGroup(
+            new RunCommand(() -> m_robotDrive.drive(0.25, 0.0, 0.0, true), m_robotDrive)
+                .withTimeout(4),
+            new RunCommand(() -> m_robotEndEffector.SetBallHolderPivotMotor(-.1), m_robotEndEffector)
+                .withTimeout(4)
+        ).andThen(
+            new RunCommand(() -> m_robotEndEffector.Shoot(.1), m_robotEndEffector)
+                .withTimeout(3)
+        );
     }
     
 public Command getAutonomousCommand() {

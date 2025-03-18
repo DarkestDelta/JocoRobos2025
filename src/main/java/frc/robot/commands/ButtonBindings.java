@@ -34,13 +34,13 @@ public class ButtonBindings {
         elevatorL1 = new ElevatorTargetCommand(m_robotElevator, 44, 0.5, 1.5, 0.1);
         elevatorL2 = new ElevatorTargetCommand(m_robotElevator, 14, 0.5, 1.5, 0.1);
         elevatorL3 = new ElevatorTargetCommand(m_robotElevator, 44, 0.5, 1.5, 0.1);
-        elevatorL4 = new ElevatorTargetCommand(m_robotElevator, 94, 0.5, 1.5, 0.1);
+        elevatorL4 = new ElevatorTargetCommand(m_robotElevator, 94, 0.5, 40, 0.1);
         elevatorBall1 = new ElevatorTargetCommand(m_robotElevator, 30, 0.5, 3, 0.1);
         elevatorBall2 = new ElevatorTargetCommand(m_robotElevator, 44, 0.5, 3, 0.1);
     }
 
     private boolean ballHolderPivotToggled = false;
-    private boolean servoState = false;
+    private boolean servoState = true;
 
     private final ElevatorTargetCommand elevatorL1;
     private final ElevatorTargetCommand elevatorL2;
@@ -59,7 +59,7 @@ public class ButtonBindings {
         .onTrue(new RunCommand(() -> m_robotDrive.drive(0, -.25, 0, true), m_robotDrive).withTimeout(1.5));
 
         new Trigger(() -> m_ButtonController.getRawButtonPressed(15))
-    .onTrue(new InstantCommand(() -> {
+        .onTrue(new InstantCommand(() -> {
         // Toggle the state
         ballHolderPivotToggled = !ballHolderPivotToggled;
         // Set motor based on the new state
@@ -70,6 +70,14 @@ public class ButtonBindings {
         new Trigger(() -> m_ButtonController.getRawButton(16))
         .whileTrue(new RunCommand(() -> m_robotElevator.lift(-.1), m_robotElevator))
         .whileFalse(new InstantCommand(() -> m_robotElevator.lift(0), m_robotElevator));
+
+        new Trigger(() -> m_driverController.getRawButton(1))
+        .whileTrue(new RunCommand(() -> m_robotEndEffector.SetLLServo(180), m_robotEndEffector))
+        .onFalse(new InstantCommand(() -> m_robotEndEffector.SetLLServo(15), m_robotEndEffector));
+    
+        new Trigger(() -> m_driverController.getRawButton(2))
+        .whileTrue(new RunCommand(() -> m_robotEndEffector.SetLLServo(0), m_robotEndEffector))
+        .onFalse(new InstantCommand(() -> m_robotEndEffector.SetLLServo(25), m_robotEndEffector));
 
         // m_robotEndEffector.setDefaultCommand(
         // new RunCommand(() -> {
@@ -97,25 +105,25 @@ public class ButtonBindings {
             }, m_robotDrive))
             .onFalse(new InstantCommand(() -> m_robotDrive.drive(0, 0, 0, true), m_robotDrive));
 
-        // new Trigger(() -> m_driverController.getRawButton(8))
-        //     .onTrue(new InstantCommand(() -> {
-        //         servoState = !servoState;
-        //         m_robotClimber.ServoSet(servoState);
-        //     }, m_robotClimber));
+        new Trigger(() -> m_driverController.getRawButton(8))
+            .onTrue(new InstantCommand(() -> {
+                servoState = !servoState;
+                m_robotClimber.ServoSet(servoState);
+            }, m_robotClimber));
 
         new Trigger(() -> m_ButtonController.getRawButton(17))
-            .whileTrue(new RunCommand(() -> m_robotEndEffector.SetLLServo(0), m_robotEndEffector)
+            .whileTrue(new RunCommand(() -> m_robotEndEffector.SetLLServo(180), m_robotEndEffector)
                 .andThen(new RunCommand(() -> m_robotClimber.ServoSet(false), m_robotClimber))
                 .withTimeout(1)
                 .andThen(new RunCommand(() -> {
                     double axisValue = m_ButtonController.getRawAxis(7);
                     double direction = Math.signum(axisValue);
-                    m_robotClimber.Climb(direction * -0.25);
+                    m_robotClimber.Climb(direction * -0.5);
                 }, m_robotClimber)))
-            .onFalse(new InstantCommand(() -> m_robotEndEffector.SetLLServo(180), m_robotEndEffector)
+            .onFalse(new InstantCommand(() -> m_robotEndEffector.SetLLServo(0), m_robotEndEffector)
                 .andThen(new InstantCommand(() -> {
                     m_robotClimber.Climb(0);
-                    m_robotClimber.ServoSet(true);
+                    // m_robotClimber.ServoSet(true);
                 }, m_robotClimber)));
 
         new Trigger(() -> m_ButtonController.getRawButton(18))
@@ -132,9 +140,9 @@ public class ButtonBindings {
             .whileTrue(new RunCommand(() -> m_robotIntake.RaiseIntake(0.15), m_robotIntake))
             .whileFalse(new InstantCommand(() -> m_robotIntake.RaiseIntake(0.0), m_robotIntake));
 
-            new Trigger(() -> m_ButtonController.getRawButton(8)) 
-            .whileTrue(new RunCommand(() -> m_robotIntake.RaiseIntake(-0.15), m_robotIntake))
-            .whileFalse(new InstantCommand(() -> m_robotIntake.RaiseIntake(0.0), m_robotIntake));
+            // new Trigger(() -> m_ButtonController.getRawButton(8)) 
+            // .whileTrue(new RunCommand(() -> m_robotIntake.RaiseIntake(-0.25), m_robotIntake))
+            // .whileFalse(new InstantCommand(() -> m_robotIntake.RaiseIntake(0.0), m_robotIntake));
     }
 
     public void ElevatorBindings() {
@@ -142,7 +150,7 @@ public class ButtonBindings {
         new Trigger(() -> m_ButtonController.getRawButton(2)).onTrue(elevatorBall2);
         new Trigger(() -> m_ButtonController.getRawButton(6)).onTrue(elevatorL2);
         new Trigger(() -> m_ButtonController.getRawButton(7)).onTrue(elevatorL3);
-        // new Trigger(() -> m_ButtonController.getRawButton(8)).onTrue(elevatorL4);
+        new Trigger(() -> m_ButtonController.getRawButton(8)).onTrue(elevatorL4);
 
         new Trigger(() -> elevatorL3.isTargetReached() || elevatorL2.isTargetReached())
         .onTrue(new RunCommand(() -> m_robotEndEffector.Shoot(0.25), m_robotEndEffector)
@@ -150,7 +158,7 @@ public class ButtonBindings {
             .andThen(new InstantCommand(() -> m_robotEndEffector.Shoot(0), m_robotEndEffector)));
 
         new Trigger(() -> elevatorL4.isTargetReached())
-            .onTrue(new RunCommand(() -> m_robotEndEffector.Shoot(0.15), m_robotEndEffector)
+            .onTrue(new RunCommand(() -> m_robotEndEffector.Shoot(0.5), m_robotEndEffector)
                 .withTimeout(1.25)
                 .andThen(new InstantCommand(() -> m_robotEndEffector.Shoot(0), m_robotEndEffector))
                 
