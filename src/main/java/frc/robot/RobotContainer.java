@@ -166,6 +166,8 @@ public class RobotContainer {
         Command pathCommand = AutoBuilder.followPath(path);
     
         // Run the command and stop at the end
-        return pathCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false));
+        return AutoBuilder.followPath(path)
+            .andThen(new InstantCommand(() -> m_robotDrive.drive(0,0,0,false), m_robotDrive)); // ✅ Ensures the robot stops at the end
     }
+    
 }
