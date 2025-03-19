@@ -34,7 +34,7 @@ public class ButtonBindings {
         elevatorL1 = new ElevatorTargetCommand(m_robotElevator, 44, 0.5, 1.5, 0.1);
         elevatorL2 = new ElevatorTargetCommand(m_robotElevator, 14, 0.5, 1.5, 0.1);
         elevatorL3 = new ElevatorTargetCommand(m_robotElevator, 44, 0.5, 1.5, 0.1);
-        elevatorL4 = new ElevatorTargetCommand(m_robotElevator, 94, 0.5, 40, 0.1);
+        elevatorL4 = new ElevatorTargetCommand(m_robotElevator, 94, 0.5, 1.5, 0.1);
         elevatorBall1 = new ElevatorTargetCommand(m_robotElevator, 30, 0.5, 3, 0.1);
         elevatorBall2 = new ElevatorTargetCommand(m_robotElevator, 44, 0.5, 3, 0.1);
     }
@@ -158,7 +158,7 @@ public class ButtonBindings {
             .andThen(new InstantCommand(() -> m_robotEndEffector.Shoot(0), m_robotEndEffector)));
 
         new Trigger(() -> elevatorL4.isTargetReached())
-            .onTrue(new RunCommand(() -> m_robotEndEffector.Shoot(0.5), m_robotEndEffector)
+            .onTrue(new RunCommand(() -> m_robotEndEffector.Shoot(0.05), m_robotEndEffector)
                 .withTimeout(1.25)
                 .andThen(new InstantCommand(() -> m_robotEndEffector.Shoot(0), m_robotEndEffector))
                 
