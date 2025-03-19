@@ -15,14 +15,14 @@ boolean IntakeUp = false;
 
     public void RaiseIntake(double Direction) { // Positive int = raise, negative = lower, 0 = stop
         
-
-        if(GetIntakePosition() >= .65) 
-        {
-            IntakeMotor.set(-Direction);
-        }
-        else{
-            IntakeMotor.set(0); 
-        }
+        IntakeMotor.set(-Direction);
+        // if(GetIntakePosition() >= .65) 
+        // {
+        //     IntakeMotor.set(-Direction);
+        // }
+        // else{
+        //     IntakeMotor.set(0); 
+        // }
     }
 
 

@@ -29,8 +29,8 @@ public class LimeLightCommands {
         this.m_driverController = container.m_driverController;
     }
 
-    private double tx = LimelightHelpers.getTX(""); // Horizontal offset in degrees
-    private double ty = LimelightHelpers.getTY(""); // Vertical offset in degrees
+    private double tx = LimelightHelpers.getTX("") * -1; // Horizontal offset in degrees
+    private double ty = LimelightHelpers.getTY("") * -1; // Vertical offset in degrees
     private double ta = LimelightHelpers.getTA(""); // Target area
     private boolean hasTarget = LimelightHelpers.getTV(""); // Valid target indicator
 
@@ -67,19 +67,23 @@ public class LimeLightCommands {
             } else if (ta < kTaCloseThreshold) {
                 double strafeSpeed = calculateStrafeSpeed();
                 double forwardSpeed = 0.3;
+                m_robotEndEffector.SetLLServo(0);
                 m_robotDrive.drive(forwardSpeed, strafeSpeed, 0, true);
             } else {
                 double strafeSpeed = calculateStrafeSpeed();
                 double forwardSpeed = calculateForwardSpeed();
                 m_robotDrive.drive(forwardSpeed, strafeSpeed, 0, true);
+                m_robotEndEffector.SetLLServo(0);
+
             }
         } else {
             m_robotDrive.drive(0, 0, 0, true);
+            m_robotEndEffector.SetLLServo(0);
         }
     }
 
     public void updateVisionData() {
-        tx = LimelightHelpers.getTX("") * -1;
+        tx = LimelightHelpers.getTX("") ;
         ty = LimelightHelpers.getTY("");
         ta = LimelightHelpers.getTA("");
         hasTarget = LimelightHelpers.getTV("");
@@ -89,6 +93,9 @@ public class LimeLightCommands {
     public boolean hasValidTarget() {
         return hasTarget && isCoralAprilTag(aprilTagID);
     }
+
+
+
 
     private boolean isCoralAprilTag(int aprilTagID) {
         for (int id : coralAprilTagIDs) {

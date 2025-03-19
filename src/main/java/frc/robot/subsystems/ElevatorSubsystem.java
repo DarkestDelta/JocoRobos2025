@@ -16,7 +16,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     SparkMax elevatorDriveMotor1 = new SparkMax(ElevatorConstants.kElevatorDriveMotor1CanId, MotorType.kBrushless);
     SparkMax elevatorDriveMotor2 = new SparkMax(ElevatorConstants.kElevatorDriveMotor2CanId, MotorType.kBrushless);
 
- 
+    
 
     public boolean isUpperLimitSwitchActive() {
         return !upperLimitSwitch.get(); // Inverted logic
