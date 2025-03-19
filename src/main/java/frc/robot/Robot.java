@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.util.ElasticMessages;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -93,10 +94,11 @@ SmartDashboard.putString("Game Message", DriverStation.getGameSpecificMessage())
   public void autonomousInit() {
     timer.reset();
     timer.start();
-    m_autonomousCommand = m_robotContainer.m_autonomousCommand();
+    m_autonomousCommand = m_robotContainer.m_autonomousCommand().andThen(new RunCommand(() -> m_robotContainer.m_robotDrive.drive(0, 0, 0, true), m_robotContainer.m_robotDrive));
     if (m_autonomousCommand != null) {
         m_autonomousCommand.schedule();
     }
+
 }
 
   /** This function is called periodically during autonomous. */
