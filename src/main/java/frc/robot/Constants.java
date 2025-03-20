@@ -120,7 +120,10 @@ public final class Constants {
     public static final int kBallHolderMotorCanId = 13;
     public static final int kBallGrabberMotorCanId = 11;
     public static final int kBallBolderEncoderDIOPort = 0; // Likely Absolute, which only needs one port
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
   }
 
   public static final class IntakeConstants {

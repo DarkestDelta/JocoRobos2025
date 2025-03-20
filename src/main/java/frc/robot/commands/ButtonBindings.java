@@ -58,6 +58,7 @@ public class ButtonBindings {
     public void configureButtonBindings() {
         ElevatorBindings();
 
+<<<<<<< Updated upstream
     double DirectionAxis = Math.signum(m_ButtonController.getRawAxis(7));
     double LRAxis = Math.signum(m_driverController.getRawAxis(7));
 
@@ -77,27 +78,73 @@ public class ButtonBindings {
         new Trigger(() -> m_driverController.getRawButton(1))
         .whileTrue(new RunCommand(() -> m_robotEndEffector.SetLLServo(180), m_robotEndEffector))
         .onFalse(new InstantCommand(() -> m_robotEndEffector.SetLLServo(15), m_robotEndEffector));
+=======
 
-        new Trigger(() -> m_ButtonController.getRawButtonPressed(15))
+
+
+
+// new Trigger(() -> m_driverController.getRawButtonPressed(4))
+// .onTrue(PathPlanComan.createGoToNearestWaypointCommand());
+
+
+        new Trigger(() -> m_driverController.getRawButton(5))
+        .onTrue(new RunCommand(() -> m_robotDrive.drive(0, .25, 0, true), m_robotDrive).withTimeout(.22));
+
+        new Trigger(() -> m_driverController.getRawButton(6))
+        .onTrue(new RunCommand(() -> m_robotDrive.drive(0, -.25, 0, true), m_robotDrive).withTimeout(.22));
+>>>>>>> Stashed changes
+
+        new Trigger(() -> m_ButtonController.getRawButtonPressed(15)) // Change 15 to your desired button number
         .onTrue(new InstantCommand(() -> {
             if (!armHoldActive) {
+<<<<<<< Updated upstream
+=======
+                // Schedule the ArmHoldCommand using the variable target encoder value, a chosen base speed, and hold voltage.
+>>>>>>> Stashed changes
                 armHoldCommand = new ArmHoldCommand(m_robotEndEffector, m_robotEndEffector.armUpEncoderValue, 0.2, 0.1);
                 armHoldCommand.schedule();
                 armHoldActive = true;
             } else {
+<<<<<<< Updated upstream
+=======
+                // Cancel the command to stop holding the arm up.
+>>>>>>> Stashed changes
                 armHoldCommand.cancel();
                 armHoldActive = false;
             }
         }, m_robotEndEffector));
 
+<<<<<<< Updated upstream
         // new Trigger(() -> m_driverController.getRawButton(4))
         // .whileTrue(new RunCommand(() -> System.out.println(m_robotEndEffector.getArmEncoder()), m_robotEndEffector));
+=======
+        new Trigger(() -> m_driverController.getRawButton(4))
+        .whileTrue(new RunCommand(() -> System.out.println(m_robotEndEffector.getArmEncoder()), m_robotEndEffector));
+>>>>>>> Stashed changes
 
 
         new Trigger(() -> m_ButtonController.getRawButton(16))
         .whileTrue(new RunCommand(() -> m_robotElevator.lift(-.1), m_robotElevator))
         .whileFalse(new InstantCommand(() -> m_robotElevator.lift(0), m_robotElevator));
 
+<<<<<<< Updated upstream
+=======
+        new Trigger(() -> m_driverController.getRawButton(1))
+        .whileTrue(new RunCommand(() -> m_robotEndEffector.SetLLServo(180), m_robotEndEffector))
+        .onFalse(new InstantCommand(() -> m_robotEndEffector.SetLLServo(15), m_robotEndEffector));
+    
+        // new Trigger(() -> m_driverController.getRawButton(2))
+        // .whileTrue(new InstantCommand(() -> m_robotEndEffector.SetLLServo(0), m_robotEndEffector))
+        // .onFalse(new InstantCommand(() -> m_robotEndEffector.SetLLServo(25), m_robotEndEffector));
+
+        // m_robotEndEffector.setDefaultCommand(
+        // new RunCommand(() -> {
+        //     double axisValue = m_driverController.getRawAxis(5);
+        //     double servoPosition = 90 - (axisValue * 90); // Maps -1,1 to 180,0 (where -1->180 and 1->0)
+        //     m_robotEndEffector.SetLLServo(servoPosition);
+        // }, m_robotEndEffector));
+
+>>>>>>> Stashed changes
         new Trigger(() -> m_ButtonController.getRawButton(3))
         .whileTrue(new RunCommand(() -> m_robotEndEffector.Shoot(-.8 * DirectionAxis), m_robotEndEffector))
         .whileFalse(new InstantCommand(() -> m_robotEndEffector.Shoot(0.0), m_robotEndEffector));
@@ -106,6 +153,16 @@ public class ButtonBindings {
             .whileTrue(new RunCommand(() -> m_robotEndEffector.Shoot(.45), m_robotEndEffector))
             .whileFalse(new InstantCommand(() -> m_robotEndEffector.Shoot(.0), m_robotEndEffector));
 
+<<<<<<< Updated upstream
+=======
+        new Trigger(() -> m_driverController.getRawButton(7))
+            .whileTrue(new RunCommand(() -> {
+                LLComand.updateVisionData();
+                LLComand.seekAndAlign();
+            }, m_robotDrive))
+            .onFalse(new InstantCommand(() -> m_robotDrive.drive(0, 0, 0, true), m_robotDrive));
+
+>>>>>>> Stashed changes
         new Trigger(() -> m_driverController.getRawButton(8))
             .onTrue(new InstantCommand(() -> {
                 servoState = !servoState;

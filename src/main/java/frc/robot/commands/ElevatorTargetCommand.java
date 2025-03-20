@@ -66,7 +66,7 @@ public boolean isFinished() {
     if (finished) {
         targetReached = false;  // Reset for the next cycle
         lastShotTime = System.currentTimeMillis(); // Store time when shot happens
-        System.out.println("Elevator Command Finished. Resetting isTargetReached(). Cooldown started.");
+        // System.out.println("Elevator Command Finished. Resetting isTargetReached(). Cooldown started.");
     }
     return finished;
 }
@@ -76,7 +76,7 @@ public boolean isTargetReached() {
     boolean shouldTrigger = targetReached && (System.currentTimeMillis() - lastShotTime > cooldownPeriod);
 
     if (shouldTrigger) {
-        System.out.println("Triggering Shoot - Cooldown Complete");
+        // System.out.println("Triggering Shoot - Cooldown Complete");
     }
 
     return shouldTrigger;
@@ -88,7 +88,7 @@ public boolean isTargetReached() {
     public void end(boolean interrupted) {
         elevator.lift(0); // Stop the motor
         holdTimer.stop();
-        System.out.println("ElevatorTargetCommand ended.");
+        // System.out.println("ElevatorTargetCommand ended.");
     }
 
     

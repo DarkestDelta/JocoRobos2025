@@ -6,6 +6,7 @@ package frc.robot;
 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
 
 import edu.wpi.first.math.MathUtil;
@@ -60,6 +61,26 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.OIConstants;
 >>>>>>> Stashed changes
+=======
+import java.io.IOException;
+
+import org.json.simple.parser.ParseException;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.util.FileVersionException;
+
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants.OIConstants;
+>>>>>>> Stashed changes
 import frc.robot.commands.ButtonBindings;
 import frc.robot.commands.LimeLightCommands;
 >>>>>>> Stashed changes
@@ -70,8 +91,11 @@ import frc.robot.subsystems.EndEffectorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import frc.robot.util.ElasticMessages;
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 // import frc.robot.commands.PathPlannerCommands;
@@ -104,6 +128,9 @@ public class RobotContainer {
     private static RobotContainer instance;
     // private final PathPlannerCommands pathPlannerCommands;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -146,6 +173,7 @@ public class RobotContainer {
         
         m_robotDrive.setDefaultCommand(
             new RunCommand(() -> m_robotDrive.drive(C1Y(), C1X(), C1Z(), true), m_robotDrive));      
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
     }
 >>>>>>> Stashed changes
@@ -450,6 +478,8 @@ private double[] getRecoveryTurnSpeed(State state) {
             break;
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
     }
 
     return new double[] {FORWARD_SPEED, xSpeed, thetaSpeed};
@@ -539,6 +569,9 @@ private void updateLastKnownDirection(double currentTX, State state) {
 
     
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
