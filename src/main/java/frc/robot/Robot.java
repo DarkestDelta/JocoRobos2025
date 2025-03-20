@@ -97,11 +97,7 @@ SmartDashboard.putString("Game Message", DriverStation.getGameSpecificMessage())
   public void autonomousInit() {
     timer.reset();
     timer.start();
-<<<<<<< Updated upstream
     // m_autonomousCommand = m_robotContainer.examplePath().andThen(new InstantCommand(() -> m_robotContainer.m_robotDrive.drive(0, 0, 0, true), m_robotContainer.m_robotDrive));
-=======
-    m_autonomousCommand = m_robotContainer.examplePath().andThen(new InstantCommand(() -> m_robotContainer.m_robotDrive.drive(0, 0, 0, true), m_robotContainer.m_robotDrive));
->>>>>>> Stashed changes
     if (m_autonomousCommand != null) {
         m_autonomousCommand.schedule();
     }
