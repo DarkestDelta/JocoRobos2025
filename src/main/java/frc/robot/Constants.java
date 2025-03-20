@@ -119,7 +119,11 @@ public final class Constants {
     public static final int kRightOutTakeMotorCanId = 12;
     public static final int kBallHolderMotorCanId = 13;
     public static final int kBallGrabberMotorCanId = 11;
+<<<<<<< Updated upstream
     public static final int kBallBolderEncoderDIOPort = 7; // Likely Absolute, which only needs one port
+=======
+    public static final int kBallBolderEncoderDIOPort = 0; // Likely Absolute, which only needs one port
+>>>>>>> Stashed changes
   }
 
   public static final class IntakeConstants {
@@ -135,7 +139,7 @@ public final class Constants {
     public static final int kElevatorDriveMotor2CanId = 16;
     public static final int kElevatorEncoderDIOPort1 =  3;
     public static final int kElevatorEncoderDIOPort2 =  2;
-    public static final int kLowerLimitSwitchDIOPort = 0;
+    public static final int kLowerLimitSwitchDIOPort = 5;
     public static final int kUpperLimitSwitchDIOPort = 1;
   }
 

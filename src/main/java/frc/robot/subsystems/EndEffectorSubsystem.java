@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
-
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.EndEffectorConstants;
@@ -15,6 +14,7 @@ public class EndEffectorSubsystem extends SubsystemBase {
     SparkMax BallHolderGrabMotor = new SparkMax(EndEffectorConstants.kBallGrabberMotorCanId, MotorType.kBrushless);
     DutyCycleEncoder BallHolderPivotEncoder = new DutyCycleEncoder(EndEffectorConstants.kBallBolderEncoderDIOPort);
 
+<<<<<<< Updated upstream
     private double encoderOffset = 0; // Track the offset manually
     private double BallHolderPivotPosition = 0; // Current position relative to the offset
 
@@ -26,6 +26,16 @@ public class EndEffectorSubsystem extends SubsystemBase {
     public void L1Shoot(double Shootingspeed) {
         RightOuttakeMotor.set(Shootingspeed);
         LeftOuttakeMotor.set(-Shootingspeed * .25);
+=======
+    public Servo LLServo = new Servo(0);
+    public double armUpEncoderValue = 1.0;  // Adjust this value as needed
+
+    public EndEffectorSubsystem() {
+    }
+
+    public void Shoot(double shootingSpeed) {
+        RightOuttakeMotor.set(-shootingSpeed);
+>>>>>>> Stashed changes
     }
 
     public void BallHolderGrabMotor(double Speed) {
@@ -56,5 +66,18 @@ public class EndEffectorSubsystem extends SubsystemBase {
         BallHolderPivotPosition = BallHolderPivotEncoder.get() - encoderOffset;
         return BallHolderPivotPosition;
     }
+    
+    // Provide a getter for the pivot encoder value
+    public double getArmEncoder() {
+        return BallHolderPivotEncoder.get();
+    }
 
+<<<<<<< Updated upstream
 }
+=======
+    @Override
+    public void periodic() {
+        // Periodic code if needed.
+    }
+}
+>>>>>>> Stashed changes

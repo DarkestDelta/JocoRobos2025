@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+<<<<<<< Updated upstream
 
 
 import edu.wpi.first.math.MathUtil;
@@ -19,20 +20,66 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Vision.LimelightHelpers;
+=======
+import java.io.IOException;
+
+import org.json.simple.parser.ParseException;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.util.FileVersionException;
+
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants.OIConstants;
+import frc.robot.commands.ButtonBindings;
+import frc.robot.commands.LimeLightCommands;
+>>>>>>> Stashed changes
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.EndEffectorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+<<<<<<< Updated upstream
 import frc.robot.util.ElasticMessages;
+=======
+// import frc.robot.commands.PathPlannerCommands;
+
+>>>>>>> Stashed changes
 
 
 
 public class RobotContainer {
+<<<<<<< Updated upstream
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final ElevatorSubsystem m_robotElevator = new ElevatorSubsystem();
   private final ClimberSubsystem m_robotClimber = new ClimberSubsystem();
+=======
+    public DriveSubsystem m_robotDrive;
+    public ElevatorSubsystem m_robotElevator;
+    public ClimberSubsystem m_robotClimber;
+    public IntakeSubsystem m_robotIntake;
+    public EndEffectorSubsystem m_robotEndEffector;
+    // public PathPlannerCommands m_robPathPlannerCommands;
+
+    
+    public Joystick m_driverController;
+    public Joystick m_ButtonController;
+    public XboxController m_XboxDriverController;
+    
+    public ButtonBindings buttons;
+    public LimeLightCommands LLCom;
+    private static RobotContainer instance;
+    // private final PathPlannerCommands pathPlannerCommands;
+>>>>>>> Stashed changes
 
   
   // Pass that instance to ElasticMessages
@@ -51,6 +98,7 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
+<<<<<<< Updated upstream
     // Configure default commands ``
     m_robotDrive.setDefaultCommand(
         // The left stick controls translation of the robot.
@@ -60,6 +108,19 @@ public class RobotContainer {
 
   public Command DriveAuto(Double x, Double z) {
     double tx = LimelightHelpers.getTX("");
+=======
+        instance = this;
+        initiateSubsystems();
+        LLCom = new LimeLightCommands(this);
+        buttons = new ButtonBindings(this);
+        buttons.configureButtonBindings();
+        // pathPlannerCommands = new PathPlannerCommands(m_robotDrive);
+
+        
+        m_robotDrive.setDefaultCommand(
+            new RunCommand(() -> m_robotDrive.drive(C1Y(), C1X(), C1Z(), true), m_robotDrive));      
+    }
+>>>>>>> Stashed changes
 
     System.out.println("TY:"+ty); // Horizontal offset from crosshair to target in degrees
     System.out.println("TX:"+tx); // Horizontal offset from crosshair to target in degrees
@@ -376,4 +437,76 @@ private void updateLastKnownDirection(double currentTX, State state) {
     state.lastValidTX = 0.25 * currentTX + 0.75 * state.lastValidTX;
 }
 
+<<<<<<< Updated upstream
+=======
+    private double C1X() {
+        return -MathUtil.applyDeadband(m_driverController.getX() * LiftSlider(), OIConstants.kDriveDeadband);
+    }
+
+    private double C1Z() {
+        return -MathUtil.applyDeadband(
+            // m_driverController.getRawAxis(3)
+            m_driverController.getZ()
+             * LiftSlider(), OIConstants.kDriveDeadband);
+    }
+
+    
+
+
+
+
+    private double LiftSlider() {
+        return ((m_driverController.getRawAxis(5) + 1) / 2);
+    }
+
+    public void initiateSubsystems() {
+    
+        m_robotDrive = new DriveSubsystem();
+        m_robotElevator = new ElevatorSubsystem();
+        m_robotClimber = new ClimberSubsystem();
+        m_robotIntake = new IntakeSubsystem();
+        m_robotEndEffector = new EndEffectorSubsystem();
+
+        m_driverController = new Joystick(OIConstants.kDriverControllerPort);
+        m_ButtonController = new Joystick(OIConstants.kButtonControllerPort);
+
+        buttons = new ButtonBindings(this);
+    }
+
+    // public SequentialCommandGroup examplepathCommandGroup()
+    // {
+
+
+    // }
+
+
+   public Command examplePath() {
+    PathPlannerPath path;
+
+    try {
+        path = PathPlannerPath.fromPathFile("New New Path");
+    } catch (FileVersionException | IOException | ParseException e) {
+        e.printStackTrace();
+        throw new RuntimeException("Failed to load path", e);
+    }
+
+    // Get the first waypoint's position
+    Translation2d startPosition = path.getPoint(0).position;
+
+    // Convert it to a full Pose2d by adding a default rotation
+    Pose2d startingPose = new Pose2d(startPosition, new Rotation2d(0));
+
+    // Reset odometry to match the path's starting pose
+    m_robotDrive.resetOdometry(startingPose);
+
+    // Use AutoBuilder to follow the path
+    Command pathCommand = AutoBuilder.followPath(path);
+
+    return pathCommand;
+}
+
+
+
+    
+>>>>>>> Stashed changes
 }

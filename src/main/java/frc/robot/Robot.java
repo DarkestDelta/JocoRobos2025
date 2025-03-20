@@ -8,7 +8,18 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+<<<<<<< Updated upstream
 import frc.robot.util.ElasticMessages;
+=======
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import frc.robot.util.ElasticMessages;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Servo;
+
+>>>>>>> Stashed changes
 
 
 /**
@@ -37,6 +48,7 @@ public class Robot extends TimedRobot {
  elasticMessages = new ElasticMessages(m_robotContainer.getElevatorSubsystem());
 
 
+    DataLogManager.start(); // Start logging
 
   }
 
@@ -80,6 +92,7 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     timer.reset();
     timer.start();
+<<<<<<< Updated upstream
     m_autonomousCommand = m_robotContainer.BasicAutoFollow();
 
     /*
@@ -95,6 +108,13 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.schedule();
     }
   }
+=======
+    m_autonomousCommand = m_robotContainer.examplePath().andThen(new InstantCommand(() -> m_robotContainer.m_robotDrive.drive(0, 0, 0, true), m_robotContainer.m_robotDrive));
+    if (m_autonomousCommand != null) {
+        m_autonomousCommand.schedule();
+    }
+}
+>>>>>>> Stashed changes
 
   /** This function is called periodically during autonomous. */
   @Override
@@ -112,7 +132,11 @@ public class Robot extends TimedRobot {
 // }
 // CommandScheduler.getInstance().run();
 
+<<<<<<< Updated upstream
 //     // m_autonomousCommand = m_robotContainer.DriveAuto(x, drivex, z).repeatedly();
+=======
+    // m_autonomousCommand = m_robotContainer.m_autonomousCommand().withTimeout(8);
+>>>>>>> Stashed changes
 //     System.out.println("TX: " + tx + ", Target: " + hasTarget);
     //  m_robotContainer.DriveAuto(x, y, z);
       // m_autonomousCommand = m_robotContainer.DriveAuto(x, z);

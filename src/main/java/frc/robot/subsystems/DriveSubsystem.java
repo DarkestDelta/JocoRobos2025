@@ -4,6 +4,12 @@
 
 package frc.robot.subsystems;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.studica.frc.AHRS;
+
 import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
@@ -16,12 +22,25 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N3;
+<<<<<<< Updated upstream
 
 import com.studica.frc.AHRS;
 import frc.robot.Constants.DriveConstants;
+=======
+import edu.wpi.first.wpilibj.DriverStation;
+>>>>>>> Stashed changes
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.DriveConstants;
+
+
 
 public class DriveSubsystem extends SubsystemBase {
+
+
+
+
+
+
   // Create MAXSwerveModules
   private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
       DriveConstants.kFrontLeftDrivingCanId,
@@ -63,6 +82,37 @@ public class DriveSubsystem extends SubsystemBase {
   public DriveSubsystem() {
     // Usage reporting for MAXSwerve template
     HAL.report(tResourceType.kResourceType_RobotDrive, tInstances.kRobotDriveSwerve_MaxSwerve);
+<<<<<<< Updated upstream
+=======
+     // ✅ FIX: Ensure RobotConfig is properly initialized
+        RobotConfig config;// ✅ FIX: Corrected method for loading from GUI;
+        try {
+            config = RobotConfig.fromGUISettings(); // ✅ FIX: Corrected method for loading from GUI
+        } catch (Exception e) {
+            e.printStackTrace();
+            
+            config = new RobotConfig(61, 8, null, null);
+            m_headingPID.enableContinuousInput(-180.0, 180.0);
+
+        }
+
+        // ✅ FIX: Corrected `AutoBuilder.configure()` call
+        AutoBuilder.configure(
+            this::getPose, // ✅ Robot pose supplier
+            this::resetOdometry, // ✅ Reset odometry function
+            this::getChassisSpeeds, // ✅ ChassisSpeeds supplier (MUST BE ROBOT RELATIVE)
+            this::driveWithChassisSpeeds, // ✅ Drive function
+            new PPHolonomicDriveController( // ✅ Corrected PathPlanner Holonomic Controller
+              new PIDConstants(2.0, 0.0, 0.0), // translation
+              new PIDConstants(4.0, 0.0, 0.0)  // rotation
+            ),
+            config, // ✅ FIX: Uses correct RobotConfig
+            () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red, // ✅ FIX: Mirrors for Red Alliance
+            this // ✅ Reference to this subsystem (sets command requirements)
+        );
+
+        System.out.println("✅ AutoBuilder successfully configured.");
+>>>>>>> Stashed changes
   }
 
   @Override
@@ -104,33 +154,74 @@ public class DriveSubsystem extends SubsystemBase {
         pose);
   }
 
-  /**
-   * Method to drive the robot using joystick info.
-   *
-   * @param xSpeed        Speed of the robot in the x direction (forward).
-   * @param ySpeed        Speed of the robot in the y direction (sideways).
-   * @param rot           Angular rate of the robot.
-   * @param fieldRelative Whether the provided x and y speeds are relative to the
-   *                      field.
-   */
+  // At the top of your DriveSubsystem:
+private final edu.wpi.first.math.controller.PIDController m_headingPID =
+new edu.wpi.first.math.controller.PIDController(.015, 0.025, 0.05);
+
+private double m_targetHeadingDegrees = 0.0;
+
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
-    // Convert the commanded speeds into the correct units for the drivetrain
+    // 1) Convert joystick inputs to real-world speeds
     double xSpeedDelivered = xSpeed * DriveConstants.kMaxSpeedMetersPerSecond;
     double ySpeedDelivered = ySpeed * DriveConstants.kMaxSpeedMetersPerSecond;
-    double rotDelivered = rot * DriveConstants.kMaxAngularSpeed;
-    
-    var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
-        fieldRelative
-            ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
-                Rotation2d.fromDegrees(m_gyro.getAngle()))
-            : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
+
+    // Get current gyro heading in degrees (assuming getHeading() returns -180..180)
+    double currentHeading = getHeading();
+
+    // We'll decide what to do with 'rot' (the driver’s rotation command)
+    double rotDelivered;
+    double rotationDeadband = 0.05;  // Tweak for your controller's “no-touch” zone
+
+    if (Math.abs(rot) > rotationDeadband) {
+        // 2) Driver is actively rotating -> pass it directly
+        rotDelivered = rot * DriveConstants.kMaxAngularSpeed;
+
+        // Update the target heading to the robot's current heading
+        m_targetHeadingDegrees = currentHeading;
+
+        // Reset the PID so it doesn't cause a jump when driver releases stick
+        m_headingPID.reset();
+    } else {
+        // 3) Driver is NOT rotating -> hold heading with PID
+        // m_headingPID.calculate(current, setpoint) returns output in degrees/sec if getHeading() is in degrees
+        double pidOutput = m_headingPID.calculate(currentHeading, m_targetHeadingDegrees);
+
+        // If your drivetrain expects rad/sec, convert
+        rotDelivered = Math.toRadians(pidOutput);
+
+        // Optionally clamp to the max turn rate
+        rotDelivered = Math.max(-DriveConstants.kMaxAngularSpeed,
+                        Math.min(DriveConstants.kMaxAngularSpeed, rotDelivered));
+    }
+
+    // 4) Construct ChassisSpeeds (field-relative or robot-relative)
+    ChassisSpeeds chassisSpeeds = fieldRelative
+        ? ChassisSpeeds.fromFieldRelativeSpeeds(
+              xSpeedDelivered,
+              ySpeedDelivered,
+              rotDelivered,
+              Rotation2d.fromDegrees(currentHeading)
+          )
+        : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered);
+
+    // 5) Convert to SwerveModuleState[] and desaturate
+    SwerveModuleState[] swerveModuleStates =
+        DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
+
     SwerveDriveKinematics.desaturateWheelSpeeds(
-        swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
+        swerveModuleStates,
+        DriveConstants.kMaxSpeedMetersPerSecond
+    );
+
+    // 6) Finally, command each swerve module
     m_frontLeft.setDesiredState(swerveModuleStates[0]);
     m_frontRight.setDesiredState(swerveModuleStates[1]);
     m_rearLeft.setDesiredState(swerveModuleStates[2]);
     m_rearRight.setDesiredState(swerveModuleStates[3]);
-  }
+}
+
+
+
 
   /**
    * Sets the wheels into an X formation to prevent movement.
@@ -186,5 +277,23 @@ public class DriveSubsystem extends SubsystemBase {
   public double getTurnRate() {
     return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
   }
+<<<<<<< Updated upstream
+=======
+
+  // Add these methods to DriveSubsystem
+public ChassisSpeeds getRobotRelativeSpeeds() {
+    return DriveConstants.kDriveKinematics.toChassisSpeeds(
+        m_frontLeft.getState(),
+        m_frontRight.getState(),
+        m_rearLeft.getState(),
+        m_rearRight.getState()
+    );
+}
+
+public void driveRobotRelative(ChassisSpeeds speeds) {
+    driveWithChassisSpeeds(speeds);
+}
+  
+>>>>>>> Stashed changes
 
 }
