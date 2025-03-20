@@ -23,9 +23,13 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N3;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
 import com.studica.frc.AHRS;
 import frc.robot.Constants.DriveConstants;
+=======
+import edu.wpi.first.wpilibj.DriverStation;
+>>>>>>> Stashed changes
 =======
 import edu.wpi.first.wpilibj.DriverStation;
 >>>>>>> Stashed changes
@@ -278,7 +282,10 @@ private double m_targetHeadingDegrees = 0.0;
     return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
   }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 
   // Add these methods to DriveSubsystem
 public ChassisSpeeds getRobotRelativeSpeeds() {

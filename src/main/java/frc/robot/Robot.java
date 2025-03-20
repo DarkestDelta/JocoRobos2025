@@ -6,11 +6,9 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-<<<<<<< Updated upstream
-import frc.robot.util.ElasticMessages;
-=======
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.util.ElasticMessages;
@@ -19,7 +17,6 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Servo;
 
->>>>>>> Stashed changes
 
 
 /**
@@ -34,6 +31,8 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
   public Timer timer = new Timer();
 
+
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -45,8 +44,9 @@ public class Robot extends TimedRobot {
  // Instantiate our RobotContainer.
  m_robotContainer = new RobotContainer();
  // Now that m_robotContainer is initialized, pass its ElevatorSubsystem instance to ElasticMessages.
- elasticMessages = new ElasticMessages(m_robotContainer.getElevatorSubsystem());
+//  elasticMessages = new ElasticMessages(m_robotContainer.getElevatorSubsystem());
 
+//  var camera = CameraServer.startAutomaticCapture();
 
     DataLogManager.start(); // Start logging
 
@@ -61,28 +61,33 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
-    // commands, running already-scheduled commands, removing finished or interrupted commands,
-    // and running subsystem periodic() methods.  This must be called from the robot's periodic
-    // block in order for anything in the Command-based framework to work.
+
     CommandScheduler.getInstance().run();
-    // System.out.println("Scheduled commands: " + CommandScheduler.getInstance().);
-    // System.out.println("yes");
-    elasticMessages.DisplayAllMessages();
-    // System.out.println("Button 1: " + m_robotContainer.m_driverController.getRawButton(1));
-    // System.out.println("Button 2: " + m_robotContainer.m_driverController.getRawButton(2));
-    // System.out.println("Button 3: " + m_robotContainer.m_driverController.getRawButton(3));
-    
+
+    // elasticMessages.DisplayAllMessages();
+
+
+
+
+SmartDashboard.putNumber("Match Time", DriverStation.getMatchTime());
+SmartDashboard.putString("Event Name", DriverStation.getEventName());
+SmartDashboard.putNumber("Match Number", DriverStation.getMatchNumber());
+SmartDashboard.putString("Game Message", DriverStation.getGameSpecificMessage());
+
+
 
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+
+  }
 
   @Override
   public void disabledPeriodic() {}
 
+    // CommandScheduler.getInstance().disable();
 
     Double x = 0.250;
     Double y = 0.0;
@@ -92,29 +97,11 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     timer.reset();
     timer.start();
-<<<<<<< Updated upstream
-    m_autonomousCommand = m_robotContainer.BasicAutoFollow();
-
-    /*
-     * String autoSelected = SmartDashboard.getString("Auto Selector",
-     * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
-     * = new MyAutoCommand(); break; case "Default Auto": default:
-     * autonomousCommand = new ExampleCommand(); break; }
-     * 
-     */
-
-    // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
-    }
-  }
-=======
-    m_autonomousCommand = m_robotContainer.examplePath().andThen(new InstantCommand(() -> m_robotContainer.m_robotDrive.drive(0, 0, 0, true), m_robotContainer.m_robotDrive));
+    // m_autonomousCommand = m_robotContainer.examplePath().andThen(new InstantCommand(() -> m_robotContainer.m_robotDrive.drive(0, 0, 0, true), m_robotContainer.m_robotDrive));
     if (m_autonomousCommand != null) {
         m_autonomousCommand.schedule();
     }
 }
->>>>>>> Stashed changes
 
   /** This function is called periodically during autonomous. */
   @Override
@@ -132,11 +119,7 @@ public class Robot extends TimedRobot {
 // }
 // CommandScheduler.getInstance().run();
 
-<<<<<<< Updated upstream
-//     // m_autonomousCommand = m_robotContainer.DriveAuto(x, drivex, z).repeatedly();
-=======
     // m_autonomousCommand = m_robotContainer.m_autonomousCommand().withTimeout(8);
->>>>>>> Stashed changes
 //     System.out.println("TX: " + tx + ", Target: " + hasTarget);
     //  m_robotContainer.DriveAuto(x, y, z);
       // m_autonomousCommand = m_robotContainer.DriveAuto(x, z);
