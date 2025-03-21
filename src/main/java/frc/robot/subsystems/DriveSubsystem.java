@@ -22,21 +22,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N3;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-
-import com.studica.frc.AHRS;
-import frc.robot.Constants.DriveConstants;
-=======
 import edu.wpi.first.wpilibj.DriverStation;
->>>>>>> Stashed changes
-=======
-import edu.wpi.first.wpilibj.DriverStation;
->>>>>>> Stashed changes
-=======
-import edu.wpi.first.wpilibj.DriverStation;
->>>>>>> Stashed changes
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 
@@ -70,6 +56,9 @@ public class DriveSubsystem extends SubsystemBase {
       DriveConstants.kRearRightTurningCanId,
       DriveConstants.kBackRightChassisAngularOffset);
 
+     
+      
+
   // The gyro sensor
   private final AHRS m_gyro = new AHRS(AHRS.NavXComType.kMXP_SPI);
 
@@ -90,8 +79,6 @@ public class DriveSubsystem extends SubsystemBase {
   public DriveSubsystem() {
     // Usage reporting for MAXSwerve template
     HAL.report(tResourceType.kResourceType_RobotDrive, tInstances.kRobotDriveSwerve_MaxSwerve);
-<<<<<<< Updated upstream
-=======
      // ✅ FIX: Ensure RobotConfig is properly initialized
         RobotConfig config;// ✅ FIX: Corrected method for loading from GUI;
         try {
@@ -120,7 +107,6 @@ public class DriveSubsystem extends SubsystemBase {
         );
 
         System.out.println("✅ AutoBuilder successfully configured.");
->>>>>>> Stashed changes
   }
 
   @Override
@@ -134,6 +120,8 @@ public class DriveSubsystem extends SubsystemBase {
             m_rearLeft.getPosition(),
             m_rearRight.getPosition()
         });
+
+        
   }
 
   /**
@@ -255,6 +243,28 @@ private double m_targetHeadingDegrees = 0.0;
     m_rearRight.setDesiredState(desiredStates[3]);
   }
 
+  public ChassisSpeeds getChassisSpeeds() {
+    return DriveConstants.kDriveKinematics.toChassisSpeeds(
+        m_frontLeft.getState(),
+        m_frontRight.getState(),
+        m_rearLeft.getState(),
+        m_rearRight.getState()
+    );
+}
+public void driveWithChassisSpeeds(ChassisSpeeds speeds) {
+    // Convert ChassisSpeeds to SwerveModuleStates
+    SwerveModuleState[] swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
+
+    // Normalize wheel speeds to be within max speed limits
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
+
+    // Set the desired states to each swerve module
+    m_frontLeft.setDesiredState(swerveModuleStates[0]);
+    m_frontRight.setDesiredState(swerveModuleStates[1]);
+    m_rearLeft.setDesiredState(swerveModuleStates[2]);
+    m_rearRight.setDesiredState(swerveModuleStates[3]);
+}
+
   /** Resets the drive encoders to currently read a position of 0. */
   public void resetEncoders() {
     m_frontLeft.resetEncoders();
@@ -285,14 +295,6 @@ private double m_targetHeadingDegrees = 0.0;
   public double getTurnRate() {
     return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
   }
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 
   // Add these methods to DriveSubsystem
 public ChassisSpeeds getRobotRelativeSpeeds() {
@@ -308,6 +310,5 @@ public void driveRobotRelative(ChassisSpeeds speeds) {
     driveWithChassisSpeeds(speeds);
 }
   
->>>>>>> Stashed changes
 
 }

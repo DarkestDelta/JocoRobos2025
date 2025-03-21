@@ -92,6 +92,7 @@ public final class Constants {
 
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
+    public static final int kButtonControllerPort = 1;
     public static final double kDriveDeadband = 0.05;
   }
 
@@ -120,10 +121,6 @@ public final class Constants {
     public static final int kBallHolderMotorCanId = 13;
     public static final int kBallGrabberMotorCanId = 11;
     public static final int kBallBolderEncoderDIOPort = 0; // Likely Absolute, which only needs one port
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
   }
 
   public static final class IntakeConstants {
@@ -145,7 +142,7 @@ public final class Constants {
 
   public static final class ClimberConstants {
     public static final int kClimberMotorCanId = 10;
-    public static final int kClimberServoPWMPort = 0;
+    public static final int kClimberServoPWMPort = 4;
     public static final double kClimberChainRatio = 10;
     public static final int kClimberMaxLength = 10;
 

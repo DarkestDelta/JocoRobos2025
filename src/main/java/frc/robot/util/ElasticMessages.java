@@ -33,14 +33,14 @@ Elastic.Notification ClimberNotif = new Elastic.Notification();
 public void DisplayAllMessages() // This is meant for a simple one time call. Do this unless there are issues. 
 {
 DisplayMatchInfo();
-DisplayLimitSwitchStates();
+// DisplayLimitSwitchStates();
 DisplayElevatorPosition();
 
 }
 
 void DisplayElevatorPosition()
 {
-SmartDashboard.putNumber("Elevator Position: ", elevator.ElevatorPosition());
+SmartDashboard.putNumber("Elevator Position: ", elevator.getElevatorPosition());
 }
 
 void DisplayMatchInfo()
@@ -51,11 +51,11 @@ SmartDashboard.putNumber("Match Number", DriverStation.getMatchNumber());
 SmartDashboard.putString("Game Message", DriverStation.getGameSpecificMessage());
 }
 
-void DisplayLimitSwitchStates()
-{
-SmartDashboard.putBoolean("Lower Limit Switch", elevator.GetLowerLimitSwitch());
-SmartDashboard.putBoolean("Upper Limit Switch", elevator.GetUpperLimitSwitch());
-}
+// void DisplayLimitSwitchStates()
+// {
+// SmartDashboard.putBoolean("Lower Limit Switch", elevator.GetLowerLimitSwitch());
+// SmartDashboard.putBoolean("Upper Limit Switch", elevator.GetUpperLimitSwitch());
+// }
 
 public void ClimberCantGoUp()
 {

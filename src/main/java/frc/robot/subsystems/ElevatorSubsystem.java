@@ -1,116 +1,73 @@
 package frc.robot.subsystems;
-import com.revrobotics.spark.SparkMax;
+
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
+
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
-import java.lang.Math;
 
-public class ElevatorSubsystem extends SubsystemBase{
+public class ElevatorSubsystem extends SubsystemBase {
 
-Encoder ElevatorEncoder = new Encoder(ElevatorConstants.kElevatorEncoderDIOPort1, ElevatorConstants.kElevatorEncoderDIOPort2);
-DigitalInput LowerLimitSwitch = new DigitalInput(ElevatorConstants.kLowerLimitSwitchDIOPort);
-DigitalInput UpperLimitSwitch = new DigitalInput(ElevatorConstants.kUpperLimitSwitchDIOPort);
-SparkMax ElevatorDriveMotor1 = new SparkMax(ElevatorConstants.kElevatorDriveMotor1CanId, MotorType.kBrushless);
-SparkMax ElevatorDriveMotor2 = new SparkMax(ElevatorConstants.kElevatorDriveMotor2CanId, MotorType.kBrushless);
-// Make sure Motor2 is set to follow Motor 1 in REV
+    Encoder elevatorEncoder = new Encoder(ElevatorConstants.kElevatorEncoderDIOPort1, ElevatorConstants.kElevatorEncoderDIOPort2);
+    DigitalInput lowerLimitSwitch = new DigitalInput(ElevatorConstants.kLowerLimitSwitchDIOPort);
+    DigitalInput upperLimitSwitch = new DigitalInput(ElevatorConstants.kUpperLimitSwitchDIOPort);
+    SparkMax elevatorDriveMotor1 = new SparkMax(ElevatorConstants.kElevatorDriveMotor1CanId, MotorType.kBrushless);
+    SparkMax elevatorDriveMotor2 = new SparkMax(ElevatorConstants.kElevatorDriveMotor2CanId, MotorType.kBrushless);
 
-int LiftCase = 0;
-double FinalLiftSpeed = 0;
-
-public Boolean GetUpperLimitSwitch()
-    {return !UpperLimitSwitch.get();}
-
-public Boolean GetLowerLimitSwitch()
-    {return !LowerLimitSwitch.get();}
-
-public double ElevatorPosition()
-    {
-        ElevatorEncoder.setDistancePerPulse(ElevatorConstants.kElevatorChainRatio);
-            if (GetLowerLimitSwitch())
-                {ElevatorEncoder.reset();}
-            else{}
-        return ElevatorEncoder.getDistance();
-    }
-
-
-
-public void Lift(double LiftSpeed)
-    {
-    // System.out.println("Lower:" + GetLowerLimitSwitch());
-    // System.out.println("Upper:" + GetUpperLimitSwitch());
-
-    ElevatorDriveMotor1.set(LiftSpeed*.25);
     
 
-    // switch(GetLiftCase(LiftSpeed))
-    // {
-    // case 1:
-    //     ElevatorDriveMotor1.set(.15);
-    //     break;
-
-    // case 2:
-    //     ElevatorDriveMotor1.set(0);
-    //     break;
-    //     //TODO: add a notif error using elastic. 
-
-    // case 3:
-    //     ElevatorDriveMotor1.set(0);
-    //     break;
-    //     //TODO: add a notif error using elastic.
-
-    // case 4:
-    //     ElevatorDriveMotor1.set(.15);
-    //     break;
-
-    // case 5:
-    //     ElevatorDriveMotor1.set(.15);
-    //     System.out.println("You got here!");
-    //     break;
-    // }
+    public boolean isUpperLimitSwitchActive() {
+        return !upperLimitSwitch.get(); // Inverted logic
     }
 
-public int GetLiftCase(double LiftSpeed)
-{
-    System.out.println("Encoder: " + ElevatorEncoder.get());
-    System.out.println("Position: " + ElevatorPosition());
-
-
-    if (GetLowerLimitSwitch()      && (LiftSpeed > 0))
-        {LiftCase = 1;
-        System.out.println(LiftCase);}
-    else if (GetLowerLimitSwitch() && (LiftSpeed < 0))
-        {LiftCase = 2;
-        System.out.println(LiftCase);
-        }
-    else if (GetUpperLimitSwitch() && (LiftSpeed > 0))
-        {LiftCase = 3;
-        System.out.println(LiftCase);
-        }
-    else if (GetUpperLimitSwitch() && (LiftSpeed < 0))
-        {LiftCase = 4;
-        System.out.println(LiftCase);
-        }
-    else
-        {LiftCase = 5;
-        System.out.println(LiftCase);
-        }
-    return LiftCase; 
-}
-
-public double CalculateFinalLiftSpeed(double LiftSpeed)
-    {
-    double ElevatorPositionPercentage = (ElevatorPosition()/ElevatorConstants.kMaxElevatorHeight);
-    if (LiftSpeed > 0)
-    {FinalLiftSpeed = Math.pow((ElevatorPositionPercentage + 1), 2);}
-    else if (LiftSpeed < 0)
-    {FinalLiftSpeed = Math.pow(ElevatorPositionPercentage, 2);}
-    else
-    {FinalLiftSpeed = 0;}
-
-    return .15;
+    public boolean isLowerLimitSwitchActive() {
+        return !lowerLimitSwitch.get();
     }
 
+    public double getElevatorPosition() {
+        elevatorEncoder.setDistancePerPulse(.01);
+        if (isLowerLimitSwitchActive()) {
+            elevatorEncoder.reset();
+            System.out.println("Lower limit switch triggered. Encoder reset.");
+        }
+        double position = elevatorEncoder.getDistance();
+        System.out.println("Current Encoder Position: " + position);
+        return position;
+    }
+    public void liftToTarget(double targetRotations, double baseSpeed) {
+        double currentPos = getElevatorPosition();
+        
+        // Prevent upward movement if upper limit is triggered
+        if (isUpperLimitSwitchActive()) {
+            elevatorDriveMotor1.set(0);
+            return;
+        }
+    
+        // Calculate error (distance remaining to target)
+        double error = targetRotations - currentPos;
+    
+        // Simple proportional control
+        double computedSpeed = 0.5 * error;
+    
+        // Clamp speed to baseSpeed and minimum threshold
+        computedSpeed = Math.min(baseSpeed, computedSpeed);
+        computedSpeed = Math.max(computedSpeed, 0.1); // Minimum speed to move
+    
+        elevatorDriveMotor1.set(computedSpeed);
+    }
 
+    public void lift(double speed) {
+        if (speed > 0 && isUpperLimitSwitchActive()) {
+            elevatorDriveMotor1.set(0);
+        } else {
+            elevatorDriveMotor1.set(speed);
+        }
+    }
+
+    @Override
+    public void periodic() {
+        // Optional: Add periodic logging or checks
+    }
 }

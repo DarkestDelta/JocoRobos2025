@@ -24,36 +24,20 @@ public class LimeLightCommands {
 
     // Tuning constants
     private static final double kAlignmentSpeedFactor = 0.05;
-<<<<<<< Updated upstream
-    private static final double kForwardSpeedFactor = 0.08;
+    private static final double kForwardSpeedFactor = 0.25;
     private static final double kRotationSpeedFactor = 0.015; // Reduced gain for smoother rotation
-    private static final double kMinStrafeSpeed = 0.05;
-    private static final double kMaxStrafeSpeed = 0.15;
+    private static final double kMinStrafeSpeed = 0.01;
+    private static final double kMaxStrafeSpeed = 0.05;
     private static final double kMaxRotationSpeed = 0.3; // Limit rotation speed
-    private static final double kMaxForwardSpeed = 0.4;
+    private static final double kMaxForwardSpeed = 0.6;
     private static final double desiredDistance = 1.0; // Distance at which you want to stop
 
     // Deadband values to avoid oscillation
-    private static final double kDeadbandTX = 0.5; // degrees
-    private static final double kDeadbandYaw = 0.5; // degrees
+    private static final double kDeadbandTX = 20; // degrees
+    private static final double kDeadbandYaw = 4; // degrees
 
     // Exponential smoothing factor for rotation error (between 0 and 1, higher means less smoothing)
-    private double smoothingFactor = 0.2;
-=======
-    private static final double kForwardSpeedFactor = 0.2;
-    private static final double kRotationSpeedFactor = 0.01; // Reduced gain for smoother rotation
-    private static final double kMinStrafeSpeed = 0.0125;
-    private static final double kMaxStrafeSpeed = 0.05;
-    private static final double kMaxRotationSpeed = 0.3; // Limit rotation speed
-    private static final double kMaxForwardSpeed = .4;
-
-    // Deadband values to avoid oscillation
-    private static final double kDeadbandTX = 5; // degrees
-    private static final double kDeadbandYaw = 5; // degrees
-
-    // Exponential smoothing factor for rotation error (between 0 and 1, higher means less smoothing)
-    private double smoothingFactor = 0.4;
->>>>>>> Stashed changes
+    private double smoothingFactor = 0.45;
     private double filteredRotationError = 0;
 
     // Allowed AprilTag IDs for Coral
@@ -137,11 +121,7 @@ public class LimeLightCommands {
      * Calculates the forward speed to drive toward the tag using the distance value.
      */
     private double calculateForwardSpeed() {
-<<<<<<< Updated upstream
-        double speed = (desiredDistance - distance) * kForwardSpeedFactor;
-=======
-        double speed =  kForwardSpeedFactor;
->>>>>>> Stashed changes
+        double speed = kForwardSpeedFactor;
         return MathUtil.clamp(speed, -kMaxForwardSpeed, kMaxForwardSpeed);
     }
 
@@ -150,10 +130,8 @@ public class LimeLightCommands {
      */
     public void seekAndAlign() {
         updateVisionData();
-<<<<<<< Updated upstream
-=======
         m_robotEndEffector.SetLLServo(10);
->>>>>>> Stashed changes
+
         if (hasValidTarget()) {
             double strafeSpeed = calculateStrafeSpeed();
             double rotationSpeed = calculateRotationSpeed();
@@ -162,12 +140,7 @@ public class LimeLightCommands {
         } else {
             // Reset filtered error when target is lost
             filteredRotationError = 0;
-<<<<<<< Updated upstream
             m_robotDrive.drive(0, 0, 0, true);
-            m_robotEndEffector.SetLLServo(0);
         }
-=======
-            m_robotDrive.drive(0, 0, 0, true);        }
->>>>>>> Stashed changes
     }
 }
