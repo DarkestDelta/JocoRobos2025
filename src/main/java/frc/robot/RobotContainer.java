@@ -2,51 +2,33 @@ package frc.robot;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.function.BooleanSupplier;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 import org.json.simple.parser.ParseException;
 
-import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FileVersionException;
-
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
-import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.DriveConstants;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.OIConstants;
-import frc.robot.Vision.LimelightHelpers;
 import frc.robot.commands.ButtonBindings;
+import frc.robot.commands.ElevatorTargetCommand;
 import frc.robot.commands.LimeLightCommands;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.EndEffectorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.config.RobotConfig;
-
-
-
 
 public class RobotContainer {
     public DriveSubsystem m_robotDrive;
@@ -60,30 +42,26 @@ public class RobotContainer {
     public XboxController m_XboxDriverController;
     
     public ButtonBindings buttons;
-    public LimeLightCommands LLCom;
     private static RobotContainer instance;
-
+    public LimeLightCommands LLCom;
+    public ElevatorTargetCommand EleCom;
 
     public RobotContainer() {
-
         instance = this;
+        // Instantiate subsystems and controllers.
         initiateSubsystems();
-        LLCom = new LimeLightCommands(this); // Initialize LimeLightCommands
+        // Instantiate button bindings.
+        LLCom = new LimeLightCommands(this);
+
         buttons = new ButtonBindings(this);
         buttons.configureButtonBindings();
-        
+        // Now register commands that depend on button bindings.
+        registerNamedCommands();
+        // Instantiate LimeLight commands.
+        // Set default command for drive.
         m_robotDrive.setDefaultCommand(
-            new RunCommand(() -> m_robotDrive.drive(C1Y(), C1X(), C1Z(), false), m_robotDrive));
-
-            
-        
-        // ✅ FIX: Configure AutoBuilder BEFORE using followPath()
-       // ✅ FIX: Correctly configure AutoBuilder for Holonomic (swerve)
-       
-        
-            
+            new RunCommand(() -> m_robotDrive.drive(C1Y(), C1X(), C1Z(), false), m_robotDrive));    
     }
-
      
     public static RobotContainer getInstance() {
         return instance;
@@ -102,23 +80,14 @@ public class RobotContainer {
     }
 
     private double C1Z() {
-        return -MathUtil.applyDeadband(
-            // m_driverController.getRawAxis(3)
-            m_driverController.getZ()
-             * LiftSlider(), OIConstants.kDriveDeadband);
+        return -MathUtil.applyDeadband(m_driverController.getZ() * LiftSlider(), OIConstants.kDriveDeadband);
     }
-
     
-
-
-
-
     private double LiftSlider() {
         return ((m_driverController.getRawAxis(5) + 1) / 2);
     }
 
     public void initiateSubsystems() {
-    
         m_robotDrive = new DriveSubsystem();
         m_robotElevator = new ElevatorSubsystem();
         m_robotClimber = new ClimberSubsystem();
@@ -127,47 +96,77 @@ public class RobotContainer {
 
         m_driverController = new Joystick(OIConstants.kDriverControllerPort);
         m_ButtonController = new Joystick(OIConstants.kButtonControllerPort);
-
-        buttons = new ButtonBindings(this);
     }
 
+    private void registerNamedCommands() {
+        NamedCommands.registerCommand("ElevatorBall1", buttons.elevatorBall1);
+        NamedCommands.registerCommand("ElevatorBall2", buttons.elevatorBall2);
+        NamedCommands.registerCommand("ElevatorL2", buttons.elevatorL2);
+        NamedCommands.registerCommand("ElevatorL3", buttons.elevatorL3);
+        NamedCommands.registerCommand("ElevatorL4", buttons.elevatorL4);
+        NamedCommands.registerCommand("Shoot", new RunCommand(() -> m_robotEndEffector.Shoot(0.45)));
+        NamedCommands.registerCommand("Stop Shooting", new RunCommand(() -> m_robotEndEffector.Shoot(0)));
+    }
 
-
-    public Command m_autonomousCommand() {
+    // Autonomous command loading methods remain unchanged...
+    private Command loadPathAndFollow(String pathName) {
         PathPlannerPath path;
-    
         try {
-            // Attempt to load the PathPlanner path
-            path = PathPlannerPath.fromPathFile("Example Path");
+            // Load the PathPlanner path
+            path = PathPlannerPath.fromPathFile(pathName);
         } catch (IOException | ParseException | FileVersionException e) {
-            // Print error message to console
-            System.err.println("🚨 Error: Failed to load PathPlanner path! Reason: " + e.getMessage());
-            e.printStackTrace();  // Print full error for debugging
-            
-            // Return a safe fallback command (e.g., do nothing)
-            return new Command() {
-                @Override
-                public void initialize() {
-                    System.out.println("⚠️ Running fallback autonomous: No path loaded.");
-                }
-            };
+            System.err.println("🚨 Error: Failed to load PathPlanner path '" + pathName + "'! Reason: " + e.getMessage());
+            e.printStackTrace();
+            return new InstantCommand(() -> System.out.println("⚠️ Running fallback autonomous: No path loaded."));
         }
-    
-        // Get the first waypoint's position
         Translation2d startPosition = path.getPoint(0).position;
-    
-        // Convert it to a full Pose2d by adding a default rotation
         Pose2d startingPose = new Pose2d(startPosition, new Rotation2d(0));
-    
-        // Reset odometry to match the path's starting pose
         m_robotDrive.resetOdometry(startingPose);
-    
-        // Use AutoBuilder to follow the path
-        Command pathCommand = AutoBuilder.followPath(path);
-    
-        // Run the command and stop at the end
         return AutoBuilder.followPath(path)
-            .andThen(new InstantCommand(() -> m_robotDrive.drive(0,0,0,false), m_robotDrive)); // ✅ Ensures the robot stops at the end
+            .andThen(new InstantCommand(() -> m_robotDrive.drive(0, 0, 0, false), m_robotDrive));
     }
-    
+
+
+    private Command loadAuto(String autoName) {
+    List<PathPlannerPath> autoPaths;
+    try {
+        // Loads the entire auto (a list of paths) from a .auto file
+        autoPaths = PathPlannerAuto.getPathGroupFromAutoFile(autoName);
+    } catch (IOException | ParseException | FileVersionException e) {
+        System.err.println("Error loading auto '" + autoName + "': " + e.getMessage());
+        return new InstantCommand(() -> System.out.println("Fallback: No auto loaded."));
+    }
+
+    // For example, build a SequentialCommandGroup of each path
+    SequentialCommandGroup autoCommand = new SequentialCommandGroup();
+    for (PathPlannerPath path : autoPaths) {
+        autoCommand.addCommands(AutoBuilder.followPath(path));
+    }
+
+    // Optionally reset odometry to the first path's start
+    if (!autoPaths.isEmpty()) {
+        Translation2d startPos = autoPaths.get(0).getPoint(0).position;
+        Pose2d startPose = new Pose2d(startPos, new Rotation2d(0));
+        m_robotDrive.resetOdometry(startPose);
+    }
+
+    // Return the combined auto, plus a stop command at the end
+    return autoCommand.andThen(new InstantCommand(() -> m_robotDrive.drive(0,0,0,false), m_robotDrive));
 }
+
+
+    // Autonomous Commands
+    public Command Forward() {
+        return loadPathAndFollow("Example Path");
+    }
+    public Command LeftAuto() {
+        return loadAuto("Left Auto");
+    }
+    public Command CenterAuto() {
+        return loadAuto("Center Auto");
+    }
+    public Command RightAuto() {
+        return loadAuto("Right Auto");
+    }
+}
+    
