@@ -74,24 +74,27 @@ public void autonomousInit() {
     timer.reset();
     timer.start();
 
-    switch (m_autoSelected) {
-        case Left:
-            m_autonomousCommand = m_robotContainer.LeftAuto()
-                .andThen(waitForElevatorAndShoot());
-            break;
-        case Middle:
-            m_autonomousCommand = m_robotContainer.CenterAuto()
-                .andThen(waitForElevatorAndShoot());
-            break;
-        case Right:
-            m_autonomousCommand = m_robotContainer.RightAuto()
-                .andThen(waitForElevatorAndShoot());
-            break;
-        default:
-            m_autonomousCommand = m_robotContainer.Forward()
-                .andThen(waitForElevatorAndShoot());
-            break;
-    }
+
+                m_autonomousCommand = m_robotContainer.LLSeeker();
+
+    // switch (m_autoSelected) {
+    //     case Left:
+    //         m_autonomousCommand = m_robotContainer.LeftAuto()
+    //             .andThen(waitForElevatorAndShoot());
+    //         break;
+    //     case Middle:
+    //         m_autonomousCommand = m_robotContainer.CenterAuto()
+    //             .andThen(waitForElevatorAndShoot());
+    //         break;
+    //     case Right:
+    //         m_autonomousCommand = m_robotContainer.RightAuto()
+    //             .andThen(waitForElevatorAndShoot());
+    //         break;
+    //     default:
+    //         m_autonomousCommand = m_robotContainer.Forward()
+    //             .andThen(waitForElevatorAndShoot());
+    //         break;
+    // }
 
     if (m_autonomousCommand != null) {
         m_autonomousCommand.schedule();
